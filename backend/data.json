@@ -1,0 +1,22 @@
+{
+    "title": "Template prueba 1",
+    "description": "Descripcion del template",
+    "autor": 10,
+    "access": "public",
+    "questions":[{
+        "title": "Pregunta 1",
+        "description": "Pregunta 1",
+        "question": "Esta es una pregunta?",
+        "type": "Line",
+        "position": 1,
+        "visibility": true
+    },
+    {
+        "title": "Pregunta 2",
+        "description": "Pregunta 2",
+        "question": "Esta es otra pregunta?",
+        "type": "Line",
+        "position": 2,
+        "visibility": true
+    }]
+}
