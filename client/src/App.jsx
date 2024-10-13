@@ -6,21 +6,21 @@ import Register from './pages/Register.jsx';
 import ProtectedRoutes from './ProtectedRoutes.jsx';
 import Profile from './pages/Profile.jsx';
 import NewTemplate from './pages/NewTemplate.jsx';
-import Template from './pages/Template.jsx';
+import EditTemplate from './pages/EditTemplate.jsx';
 
 function App() {
   //themes light dark high-contrast
   return (
-    <CustomProvider theme='light'> 
+    <CustomProvider theme='dark'> 
       <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/login' exact element={<Login />} />
         <Route path='/register' exact element={<Register />} />
-        <Route path='/template' exact element={<Template />} />
         <Route element={<ProtectedRoutes />}>
           <Route path='/profile' exact element={<Profile />} />
-          <Route path='/newtemplate' exact element={<NewTemplate />} />
+          <Route path='/newTemplate' exact element={<NewTemplate />} />
+          <Route path='/editTemplate' exact element={<EditTemplate />} />
         </Route>
       </Routes>
     </BrowserRouter>

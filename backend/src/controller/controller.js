@@ -62,7 +62,7 @@ export const newTemplate = async (request,response) => {
         const another_result = await pool.query(values);
         return response.json("OK");
     }catch(error){
-        response.status(500).json(error);
+        return response.status(500).json(error);
     }
 }
 
@@ -71,7 +71,7 @@ export const getAllTemplates = async (request,response) => {
         const [result] = await pool.query(`SELECT id,title,description,autor FROM Templates WHERE access LIKE "public";`);
         return response.json(result);
     }catch(error){
-        response.status(500).json(error);
+        return response.status(500).json(error);
     }
 }
 
@@ -79,9 +79,8 @@ export const getTemplate = async (request,response) => {
     try{
         const { id } = request.body;
         const queryTemplate = `SELECT id,title,description,autor,access FROM Templates WHERE id = ${id};`;
-        const queryQuestions = `SELECT title,description,question,type,position,visibility,options FROM Questions WHERE template = ${id} ORDER BY position ASC;`;
+        const queryQuestions = `SELECT id,title,description,question,type,position,visibility,options FROM Questions WHERE template = ${id} ORDER BY position ASC;`;
         const [template] = await pool.query(queryTemplate);
-        console.log(template);
         const [questions] = await pool.query(queryQuestions);
         const jsonData = {
             "id":template[0].id,
@@ -91,9 +90,48 @@ export const getTemplate = async (request,response) => {
             "access":template[0].access,
             "questions": questions};
             console.log(jsonData);
-        response.json(jsonData);
+        return response.json(jsonData);
     }catch(error){
-        response.status(500).json(error);
+        return response.status(500).json(error);
+    }
+}
+
+export const updateTemplate = async (request, response) => {
+    try{
+        const { id,title,description,access,questions,deleted } = request.body;
+        const queryUpdateTemplate = `UPDATE Templates SET title = "${title}", description = "${description}", access = "${access}" WHERE id = ${id}`;
+        await pool.query(queryUpdateTemplate);
+        const newQuestions = questions.filter(question => !question.id);
+        const updated = questions.filter(question => question.id>0);
+        if(newQuestions.length>0){
+            const queryNewQuestions = queryInsertQuestions(newQuestions,id);
+        await pool.query(queryNewQuestions);
+        }      
+        if(updated.length>0){
+            updated.forEach(async (question) => {
+            const queryUpdateQuestions = `UPDATE Questions SET title = "${question.title}",description = "${question.description}",question = "${question.question}",type = "${question.type}",position = ${question.position},visibility = ${question.visibility},options = "${question.options}" WHERE id = ${question.id}`;
+            await pool.query(queryUpdateQuestions);
+        });}
+        if(deleted.length>0){
+            deleted.forEach(async (question) => {
+                const queryDeleteQuestions = `DELETE FROM Questions WHERE id = ${question.id}`;
+                await pool.query(queryDeleteQuestions);
+            });
+        }  
+        return response.json("OK");
+    }catch(error){
+        return response.status(500).json(error);
+    }
+}
+
+export const deleteTemplate = async (request, response) => {
+    try{
+        const { id } = request.body;
+        await pool.query(`DELETE FROM Questions WHERE template = ${id}`);
+        await pool.query(`DELETE FROM Templates WHERE id = ${id}`);
+        return response.json("OK");
+    }catch(error){
+        return response.status(500).json(error);
     }
 }
 
@@ -118,7 +156,7 @@ export const getPopularTemplates = async (request, response) => {
 const queryInsertQuestions = (questions,idTemplate) => {
     let query = "INSERT INTO Questions (template,title,description,question,type,position,visibility,options) VALUES ";
         for (let i=0;i<questions.length;i++){
-            query += `(${idTemplate},"${questions[i].title}","${questions[i].description}","${questions[i].question}","${questions[i].type}",${questions[i].position},"${questions[i].visibility}","${questions[i].options}")`;
+            query += `(${idTemplate},"${questions[i].title}","${questions[i].description}","${questions[i].question}","${questions[i].type}",${questions[i].position},${questions[i].visibility},"${questions[i].options}")`;
             (i === questions.length-1) ? query += ";" : query += ",";
         }
         return query;
@@ -135,3 +173,30 @@ const queryGetQuestions = (id) => {
 const queryInsertTemplate = (title,description,autor,access) => {
     return `INSERT INTO Templates (title,description,autor,access) VALUES ("${title}","${description}",${autor},"${access}");`;
 }
+
+// export const updateTemplate = async (request, response) => {
+//     try{
+//         const { id,title,description,access,questions,updated,deleted } = request.body;
+//         const queryUpdateTemplate = `UPDATE Templates SET title = "${title}", description = "${description}", access = "${access}" WHERE id = ${id}`;
+//         await pool.query(queryUpdateTemplate);
+//         const newQuestions = questions.filter(question => !question.id);
+//         if(newQuestions.length>0){
+//             const queryNewQuestions = queryInsertQuestions(newQuestions,id);
+//         await pool.query(queryNewQuestions);
+//         }      
+//         if(updated.length>0){
+//             updated.forEach(async (question) => {
+//             const queryUpdateQuestions = `UPDATE Questions SET title = "${question.title}",description = "${question.description}",question = "${question.question}",type = "${question.type}",position = ${question.position},visibility = ${question.visibility},options = "${question.options}" WHERE id = ${question.id}`;
+//             await pool.query(queryUpdateQuestions);
+//         });}
+//         if(deleted.length>0){
+//             deleted.forEach(async (question) => {
+//                 const queryDeleteQuestions = `DELETE FROM Questions WHERE id = ${question.id}`;
+//                 await pool.query(queryDeleteQuestions);
+//             });
+//         }  
+//         response.json("OK");
+//     }catch(error){
+//         response.status(500).json(error);
+//     }
+// }

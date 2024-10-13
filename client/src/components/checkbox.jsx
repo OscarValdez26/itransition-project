@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { HStack, Panel, Button, Input, Checkbox, CheckboxGroup } from "rsuite";
 
-function CheckboxAnswer({editOptions}) {
-    const [options, setOptions] = useState([]);
+function CheckboxAnswer({stringOptions, editOptions}) {
+    const getOptions = () => {
+        if(!stringOptions) return [];
+        if(stringOptions.includes(',')){
+            return stringOptions.split(',') ;
+        }
+        return [stringOptions];
+    }
+    const [options, setOptions] = useState(getOptions);
     const [option, setOption] = useState("");
     const [checkedOptions,setCheckedOptions] = useState([]);
     const addOption = () => {

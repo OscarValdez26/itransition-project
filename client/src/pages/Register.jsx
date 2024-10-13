@@ -5,20 +5,23 @@ import { useContext, useState } from 'react';
 import { AppContext } from '../context/Provider';
 
 function Register() {
-    const {setUser} = useContext(AppContext);
+    const { setUser } = useContext(AppContext);
     const [registerError, setRegisterError] = useState(false);
-    const [error,setError] = useState();
+    const [error, setError] = useState();
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const onSubmit = handleSubmit(async (values) => {
         if (values.password === values.confpassword) {
             setRegisterError(false);
             const result = await postRequest('/register', values);
-            if(result.id > 0){
+            if (result.id > 0) {
                 setUser(result);
+                localStorage.setItem("userId", result.id);
+                localStorage.setItem("userName", result.name);
+                localStorage.setItem("userEmail", result.email);
                 navigate('/profile');
             }
-            else{
+            else {
                 setError(result);
                 setRegisterError(true);
             }

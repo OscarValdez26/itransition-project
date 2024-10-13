@@ -14,9 +14,9 @@ function Login() {
         const result = await postRequest('/login',values); 
         if(result.id > 0){
             setUser(result);
-            // localStorage.setItem("userId",result.id);
-            // localStorage.setItem("userName",result.name);
-            // localStorage.setItem("userEmail",result.email);
+            localStorage.setItem("userId",result.id);
+            localStorage.setItem("userName",result.name);
+            localStorage.setItem("userEmail",result.email);
             navigate('/profile');
         }
         else{

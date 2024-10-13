@@ -18,10 +18,10 @@ function Question({questionData, onEdit, onDelete}) {
     }
     return ( 
         <Panel header={questionData.title} bordered collapsible>
-            <Input placeholder="Title" size="lg" onChange={(e) => { setTitle(e) }} />
-            <Input placeholder="Description" size="lg" onChange={(e) => { setDescription(e) }} />
-            <Input placeholder="Question" size="lg" onChange={(e) => { setQuestion(e) }} />
-            {questionData.type == "Checkbox" && <CheckboxAnswer editOptions={editOptions}/>}
+            <Input placeholder={title} size="lg" onChange={(e) => { setTitle(e) }} />
+            <Input placeholder={description} size="lg" onChange={(e) => { setDescription(e) }} />
+            <Input placeholder={question} size="lg" onChange={(e) => { setQuestion(e) }} />
+            {questionData.type == "Checkbox" && <CheckboxAnswer stringOptions={questionData.options} editOptions={editOptions}/>}
             <HStack>
             <Button onClick={saveQuestion}>Save Question</Button>
             <Button onClick={deleteQuestion}>Delete Question</Button>

@@ -1,4 +1,4 @@
-import { Table } from 'rsuite';
+import { Button, HStack, Table } from 'rsuite';
 import { useContext } from 'react';
 import { AppContext } from '../context/Provider.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -11,16 +11,16 @@ function TableTemplates() {
     const selectTemplate = async (row) => {
         const result = await postRequest('/getTemplate',{"id":row.id});
         setTemplate(result);
-        navigate('/template');
+        navigate('/editTemplate');
     }
     const newTemplate = () => {
-        navigate('/newtemplate');
+        navigate('/newTemplate');
     }
     return (
         <div className='m-4 p-4 rounded-md w-full'>
             <div className='flex justify-between items-center'>
                 <h1>Templates</h1>
-                <button className='px-4' onClick={newTemplate}>Add</button>
+                <Button className='mx-4' onClick={newTemplate}>Add</Button>              
             </div>
             <Table hover={true} virtualized data={userTemplates} onRowClick={selectTemplate} height={600}>
                 <Column flexGrow={2}>
