@@ -11,7 +11,7 @@ import EditTemplate from './pages/EditTemplate.jsx';
 function App() {
   //themes light dark high-contrast
   return (
-    <CustomProvider theme='dark'> 
+    <CustomProvider theme='light'> 
       <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home />} />

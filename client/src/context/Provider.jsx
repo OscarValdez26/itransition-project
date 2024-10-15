@@ -21,8 +21,10 @@ function Provider({ children }) {
     const [user, setUser] = useState(getLocalUser);
     const [userTemplates, setUserTemplates] = useState([]);
     const [template, setTemplate] = useState();
+    const [questions,setQuestions] = useState([]);
+    const [reorder,setReorder] = useState(false);
     return (
-        <AppContext.Provider value={{ user, setUser, userTemplates, setUserTemplates, template, setTemplate, page, setPage }}>
+        <AppContext.Provider value={{ user, setUser, userTemplates, setUserTemplates, template, setTemplate, page, setPage, questions, setQuestions, reorder, setReorder }}>
             {children}
         </AppContext.Provider>
     );

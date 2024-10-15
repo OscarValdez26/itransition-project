@@ -1,19 +1,22 @@
-import { Button, HStack, Table } from 'rsuite';
+import { Button, Table } from 'rsuite';
 import { useContext } from 'react';
 import { AppContext } from '../context/Provider.jsx';
 import { useNavigate } from 'react-router-dom';
 import { postRequest } from '../api/api.js';
 
 function TableTemplates() {
-    const { userTemplates,setTemplate } = useContext(AppContext);
+    const { userTemplates, setTemplate, setPage, setQuestions } = useContext(AppContext);
     const { Column, HeaderCell, Cell } = Table;
     const navigate = useNavigate();
     const selectTemplate = async (row) => {
         const result = await postRequest('/getTemplate',{"id":row.id});
         setTemplate(result);
+        setQuestions(result.questions);
+        setPage("configuration");
         navigate('/editTemplate');
     }
     const newTemplate = () => {
+        setPage("configuration");
         navigate('/newTemplate');
     }
     return (

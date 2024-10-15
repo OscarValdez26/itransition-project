@@ -1,12 +1,15 @@
-import NavigationBar from "../components/navbar";
-import { useContext, useEffect, useState } from "react";
+import NavigationBar from "../components/navbarProfile.jsx";
+import { useContext, useEffect } from "react";
 import { postRequest } from "../api/api.js";
 import { AppContext } from "../context/Provider.jsx";
 import TableTemplates from "../components/table.jsx";
 
 function Profile() {
-    const { user, setUserTemplates, page, setPage } = useContext(AppContext);
+    const { user, setUserTemplates, page, setPage, setTemplate, setQuestions } = useContext(AppContext);
     useEffect(()=>{
+        setPage("mytemplates");
+        setTemplate();
+        setQuestions([]);
         const request = async () => {
             const result = await postRequest('/getUserTemplates',{id:user.id});
             setUserTemplates(result);
