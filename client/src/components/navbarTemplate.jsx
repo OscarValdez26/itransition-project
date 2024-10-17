@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { Navbar, Nav, Button } from 'rsuite';
-import { AppContext } from '../context/Provider';
+import { AppContext } from '../context/Provider.jsx';
 
 function NavigationBar({updateTemplate,setOpenModal,includeForms}) {
     const { user, setPage } = useContext(AppContext);

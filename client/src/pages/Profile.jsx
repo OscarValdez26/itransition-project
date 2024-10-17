@@ -2,7 +2,8 @@ import NavigationBar from "../components/navbarProfile.jsx";
 import { useContext, useEffect } from "react";
 import { postRequest } from "../api/api.js";
 import { AppContext } from "../context/Provider.jsx";
-import TableTemplates from "../components/table.jsx";
+import TableTemplates from "../components/tableTemplates.jsx";
+import PublicForms from "../components/publicForms.jsx";
 
 function Profile() {
     const { user, setUserTemplates, page, setPage, setTemplate, setQuestions } = useContext(AppContext);
@@ -20,7 +21,7 @@ function Profile() {
         <div>
             <NavigationBar setPage={setPage}/>
             {page === "mytemplates" && <TableTemplates/>}
-            {page === "forms" && <div>Aqui van los forms</div>}
+            {page === "forms" && <PublicForms/>}
         </div>
      );
 }

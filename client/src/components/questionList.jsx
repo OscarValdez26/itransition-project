@@ -1,7 +1,8 @@
 import { useContext, useEffect } from 'react';
 import Sortable from 'sortablejs';
-import Question from './question.jsx';
+import Question from './editableQuestion.jsx';
 import { AppContext } from '../context/Provider.jsx';
+import EditableQuestion from './editableQuestion.jsx';
 
 const QuestionsList = ({ onEdit, onDelete, }) => {
     const { questions, setQuestions, setPage, setReorder } = useContext(AppContext);
@@ -10,7 +11,6 @@ const QuestionsList = ({ onEdit, onDelete, }) => {
         const sortable = Sortable.create(element, {
             animation:150,        
             onEnd: (evt) => {
-                console.log(questions);
                 const changeQuestions = [...questions];
                 const [movedItem] = changeQuestions.splice(evt.oldIndex, 1);
                 changeQuestions.splice(evt.newIndex, 0, movedItem);
@@ -22,19 +22,16 @@ const QuestionsList = ({ onEdit, onDelete, }) => {
                 setReorder(true);
                 setPage("");
             },
-            onStart: () => {
-                console.log(questions);
-            }
         });
         return () => {
             sortable.destroy();
         };
-    },[]);
+    });
     return (
             <ul id="questionsList" >
             {questions.map((question, index) => (
                 <li key={index}>
-                    <Question questionData={question} onEdit={onEdit} onDelete={onDelete}/>
+                    <EditableQuestion questionData={question} onEdit={onEdit} onDelete={onDelete}/>
                 </li>
             ))}
             </ul>

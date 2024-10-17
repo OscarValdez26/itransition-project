@@ -37,7 +37,7 @@ function Login() {
                     {loginError && <p className="text-red-500">{error}</p>}
                     <button className='text-bold text-sky-500 m-2 p-2 rounded-md bg-gray-700' type='submit'>Login</button>
                 </form>
-                <p className='flex gap-x-2 justify-between'>
+                <p className='flex gap-x-2 justify-between text-gray-200'>
                     Do not have an account? <Link to="/register" className='text-bold text-sky-500'>Register</Link>
                 </p>
             </div>

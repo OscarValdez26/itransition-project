@@ -35,112 +35,113 @@ export const loginUser = async (request, response) => {
         if (!isMatch) return response.json("Password invalid");
         const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY);
         response.cookie('token', token);//, { sameSite: "none", httpOnly: true, secure: true }); PRODUCCION
-        return response.json({"id":user.id,"name":user.name,"email":user.email});
+        return response.json({ "id": user.id, "name": user.name, "email": user.email });
     } catch (error) {
         response.status(500).json(error);
     }
 }
 
-export const logoutUser = async (request,response) => {
-    try{
-        response.cookie('token'," ");
+export const logoutUser = async (request, response) => {
+    try {
+        response.cookie('token', " ");
         response.json("Logout OK");
-    }catch(error){
+    } catch (error) {
         response.status(500).json(error);
     }
 }
 
-export const newTemplate = async (request,response) => {
-    try{
+export const newTemplate = async (request, response) => {
+    try {
         const { title, description, autor, access, questions } = request.body;
         const template = `INSERT INTO Templates (title,description,autor,access) VALUES ("${title}","${description}",${autor},"${access}");`;
         const result = await pool.query(template);
         const idTemplate = result[0].insertId;
-        const values = queryInsertQuestions(questions,idTemplate);
-        console.log(template);
-        console.log(values);
+        const values = queryInsertQuestions(questions, idTemplate);
         const another_result = await pool.query(values);
         return response.json("OK");
-    }catch(error){
+    } catch (error) {
         return response.status(500).json(error);
     }
 }
 
-export const getAllTemplates = async (request,response) => {
-    try{
-        const [result] = await pool.query(`SELECT id,title,description,autor FROM Templates WHERE access LIKE "public";`);
+export const getAllTemplates = async (request, response) => {
+    try {
+        const { id } = request.body;
+        const [result] = await pool.query(`SELECT Templates.id,title,description,name FROM Templates INNER JOIN Users ON Templates.autor = Users.id WHERE access LIKE "public" AND autor != ${id};`);
         return response.json(result);
-    }catch(error){
+    } catch (error) {
         return response.status(500).json(error);
     }
 }
 
-export const getTemplate = async (request,response) => {
-    try{
+export const getTemplate = async (request, response) => {
+    try {
         const { id } = request.body;
         const queryTemplate = `SELECT id,title,description,autor,access FROM Templates WHERE id = ${id};`;
         const queryQuestions = `SELECT id,title,description,question,type,position,visibility,options FROM Questions WHERE template = ${id} ORDER BY position ASC;`;
         const [template] = await pool.query(queryTemplate);
         const [questions] = await pool.query(queryQuestions);
         const jsonData = {
-            "id":template[0].id,
-            "title":template[0].title,
-            "description":template[0].description,
-            "autor":template[0].autor,
-            "access":template[0].access,
-            "questions": questions};
-            console.log(jsonData);
+            "id": template[0].id,
+            "title": template[0].title,
+            "description": template[0].description,
+            "autor": template[0].autor,
+            "access": template[0].access,
+            "questions": questions
+        };
+        console.log(jsonData);
         return response.json(jsonData);
-    }catch(error){
+    } catch (error) {
         return response.status(500).json(error);
     }
 }
 
 export const updateTemplate = async (request, response) => {
-    try{
-        const { id,title,description,access,questions,deleted } = request.body;
+    try {
+        const { id, title, description, access, questions, deleted } = request.body;
         const queryUpdateTemplate = `UPDATE Templates SET title = "${title}", description = "${description}", access = "${access}" WHERE id = ${id}`;
         await pool.query(queryUpdateTemplate);
         const newQuestions = questions.filter(question => !question.id);
-        const updated = questions.filter(question => question.id>0);
-        if(newQuestions.length>0){
-            const queryNewQuestions = queryInsertQuestions(newQuestions,id);
-        await pool.query(queryNewQuestions);
-        }      
-        if(updated.length>0){
+        const updated = questions.filter(question => question.id > 0);
+        if (newQuestions.length > 0) {
+            const queryNewQuestions = queryInsertQuestions(newQuestions, id);
+            await pool.query(queryNewQuestions);
+        }
+        if (updated.length > 0) {
             updated.forEach(async (question) => {
-            const queryUpdateQuestions = `UPDATE Questions SET title = "${question.title}",description = "${question.description}",question = "${question.question}",type = "${question.type}",position = ${question.position},visibility = ${question.visibility},options = "${question.options}" WHERE id = ${question.id}`;
-            await pool.query(queryUpdateQuestions);
-        });}
-        if(deleted.length>0){
+                const queryUpdateQuestions = `UPDATE Questions SET title = "${question.title}",description = "${question.description}",question = "${question.question}",type = "${question.type}",position = ${question.position},visibility = ${question.visibility},options = "${question.options}" WHERE id = ${question.id}`;
+                await pool.query(queryUpdateQuestions);
+            });
+        }
+        if (deleted.length > 0) {
             deleted.forEach(async (question) => {
                 const queryDeleteQuestions = `DELETE FROM Questions WHERE id = ${question.id}`;
                 await pool.query(queryDeleteQuestions);
             });
-        }  
+        }
         return response.json("OK");
-    }catch(error){
+    } catch (error) {
         return response.status(500).json(error);
     }
 }
 
 export const deleteTemplate = async (request, response) => {
-    try{
+    try {
         const { id } = request.body;
         await pool.query(`DELETE FROM Questions WHERE template = ${id}`);
         await pool.query(`DELETE FROM Templates WHERE id = ${id}`);
         return response.json("OK");
-    }catch(error){
+    } catch (error) {
         return response.status(500).json(error);
     }
 }
 
-export const getUserTemplates = async (request,response) => {
-    try{
+export const getUserTemplates = async (request, response) => {
+    try {
         const { id } = request.body;
         const [result] = await pool.query(`SELECT id,title,description,autor,access FROM Templates WHERE autor = ${id};`);
         response.json(result);
-    }catch(error){
+    } catch (error) {
         response.status(500).json(error);
     }
 }
@@ -153,13 +154,53 @@ export const getPopularTemplates = async (request, response) => {
     }
 }
 
-const queryInsertQuestions = (questions,idTemplate) => {
+export const getForms = async (request, response) => {
+    try {
+        const { id } = request.body;
+        const queryForms = `SELECT DISTINCT Forms.id,name,DATE_FORMAT(date,"%M %e %Y %T") as date FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Users ON Forms.user = Users.id WHERE template = ${id};`;
+        const [forms] = await pool.query(queryForms);
+        const queryAnswers = `SELECT Forms.id,question,value FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Users ON Forms.user = Users.id WHERE template = ${id};`;
+        const [answers] = await pool.query(queryAnswers);
+        const jsonForms = forms.map(form => {
+            const formAnswers = answers.filter(answer => form.id === answer.id);
+            return { ...form, answers: formAnswers };
+        });
+        response.json(jsonForms);
+    } catch (error) {
+        response.status(500).json(error);
+    }
+}
+
+export const newForm = async (request, response) => {
+    try {
+        const { template, user, answers } = request.body;
+        const insertForm = `INSERT INTO Forms (template,user) VALUES (${template},${user});`;
+        const result = await pool.query(insertForm);
+        const idForm = result[0].insertId;
+        const values = queryInsertAnswers(answers, idForm);
+        const another_result = await pool.query(values);
+        response.json("OK");
+    } catch (error) {
+        response.status(500).json(error);
+    }
+}
+
+const queryInsertQuestions = (questions, idTemplate) => {
     let query = "INSERT INTO Questions (template,title,description,question,type,position,visibility,options) VALUES ";
-        for (let i=0;i<questions.length;i++){
-            query += `(${idTemplate},"${questions[i].title}","${questions[i].description}","${questions[i].question}","${questions[i].type}",${questions[i].position},${questions[i].visibility},"${questions[i].options}")`;
-            (i === questions.length-1) ? query += ";" : query += ",";
-        }
-        return query;
+    for (let i = 0; i < questions.length; i++) {
+        query += `(${idTemplate},"${questions[i].title}","${questions[i].description}","${questions[i].question}","${questions[i].type}",${questions[i].position},${questions[i].visibility},"${questions[i].options}")`;
+        (i === questions.length - 1) ? query += ";" : query += ",";
+    }
+    return query;
+}
+
+const queryInsertAnswers = (answers, idForm) => {
+    let query = "INSERT INTO Answers (form,question,value) VALUES ";
+    for (let i = 0; i < answers.length; i++) {
+        query += `(${idForm},${answers[i].id},"${answers[i].value}")`;
+        (i === answers.length - 1) ? query += ";" : query += ",";
+    }
+    return query;
 }
 
 const queryGetTemplate = (id) => {
@@ -170,7 +211,7 @@ const queryGetQuestions = (id) => {
     return `SELECT title,description,question,type,position,visibility FROM Questions WHERE template = ${id} ORDER BY position ASC;`;
 }
 
-const queryInsertTemplate = (title,description,autor,access) => {
+const queryInsertTemplate = (title, description, autor, access) => {
     return `INSERT INTO Templates (title,description,autor,access) VALUES ("${title}","${description}",${autor},"${access}");`;
 }
 

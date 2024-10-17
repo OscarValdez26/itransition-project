@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Input, Toggle, SelectPicker, Button, HStack, Modal } from "rsuite";
+import { Input, Toggle, SelectPicker, Button, HStack } from "rsuite";
 import { postRequest } from "../api/api.js";
 import { AppContext } from "../context/Provider.jsx";
 import { useNavigate } from "react-router-dom";
 import NavigationBar from "../components/navbarTemplate.jsx";
 import QuestionsList from "../components/questionList.jsx";
+import ModalDelete from "../components/modalDelete.jsx";
+import FilledForms from "../components/filledForms.jsx";
 
 function EditTemplate() {
     const { template, user, page, questions, setQuestions, reorder, setReorder, setPage } = useContext(AppContext);
@@ -72,14 +74,6 @@ function EditTemplate() {
             alert("Something went wrong");
         }
     }
-    const deleteTemplate = async () => {
-        setOpenModal(false);
-        const result = await postRequest('/deleteTemplate', { "id": template.id });
-        if (result === "OK") {
-            alert("Template deleted");
-            navigate('/profile');
-        }
-    }
     useEffect(() => {
         if (reorder) {
             setReorder(false);
@@ -90,13 +84,12 @@ function EditTemplate() {
         <div>
             <NavigationBar updateTemplate={updateTemplate} setOpenModal={setOpenModal} includeForms={true} />
             {page === "configuration" && <div className="p-2 m-2 justify-center">
-                <label className="text-bold">Title</label>
-                <HStack>
-                    <Input placeholder={template.title} size="lg" onChange={(e) => { setTitle(e) }} />
-                    <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked={template.access === "public"} onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
-                </HStack>
-                <label className="text-bold">Description</label>
+                <p className="text-bold">Title</p>
+                <Input placeholder={template.title} size="lg" onChange={(e) => { setTitle(e) }} />
+                <p className="text-bold">Description</p>
                 <Input placeholder={template.description} size="sm" onChange={(e) => { setDescription(e) }} />
+                <p className="text-bold">Access</p>
+                <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked={template.access === "public"} onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
             </div>}
             {page === "questions" &&
                 <div>
@@ -108,25 +101,9 @@ function EditTemplate() {
                     </HStack>
                     <QuestionsList onEdit={editQuestion} onDelete={deleteQuestion} />
                 </div>
-
             }
-            <Modal open={openModal} onClose={() => setOpenModal(false)}>
-                <Modal.Header>
-                    <Modal.Title>ALERT!!!</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>You are deleting the current template</p>
-                    <p>Are you sure?</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={deleteTemplate} appearance="primary" color="red">
-                        Delete
-                    </Button>
-                    <Button onClick={() => setOpenModal(false)} appearance="primary">
-                        Cancel
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            {page === "forms" && <FilledForms id={template.id}/>}
+            <ModalDelete template={template} openModal={openModal} setOpenModal={setOpenModal} />
         </div>
     );
 }

@@ -20,7 +20,7 @@ function NavigationBar() {
             <Nav>
                 <Nav.Item>Welcome {user.name}</Nav.Item>
                 <Nav.Item onSelect={()=>setPage("mytemplates")}>My Templates</Nav.Item>
-                <Nav.Item onSelect={()=>setPage("forms")}>Forms</Nav.Item>
+                <Nav.Item onSelect={()=>setPage("forms")}>Public forms</Nav.Item>
             </Nav>
             <Nav pullRight>
                 <Nav.Item onSelect={logout} icon={<ExitIcon/>}>Logout</Nav.Item>

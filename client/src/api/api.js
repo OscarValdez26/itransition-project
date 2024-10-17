@@ -20,7 +20,7 @@ export async function postRequest(path,json) {
 export async function getRequest(path){
     try {
         //console.log(`${URL}${path}`);
-        const response = await fetch(`${URL}${path}`);
+        const response = await fetch(`${URL}${path}`,{method: "GET",headers: {"Content-Type": "application/json"},credentials:"include"});
         if (!response.ok) {
             throw new Error("Something went wrong");
         }

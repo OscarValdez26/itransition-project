@@ -75,13 +75,12 @@ function NewTemplate() {
         <div>
             <NavigationBar updateTemplate={saveTemplate} includeForms={false} />
             {page === "configuration" && <div className="p-2 m-2 justify-center">
-                <label className="text-bold">Title</label>
-                <HStack>
-                    <Input placeholder="Title" size="lg" onChange={(e) => { setTitle(e) }} />
-                    <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
-                </HStack>
-                <label className="text-bold">Description</label>
+                <p className="text-bold">Title</p>
+                <Input placeholder="Title" size="lg" onChange={(e) => { setTitle(e) }} />
+                <p className="text-bold">Description</p>
                 <Input placeholder="Description" size="sm" onChange={(e) => { setDescription(e) }} />
+                <p className="text-bold">Access</p>
+                <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
             </div>}
             {page === "questions" && <div>
                 <HStack className="m-2 p-2" justifyContent="flex-end">

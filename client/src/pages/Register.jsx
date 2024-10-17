@@ -47,7 +47,7 @@ function Register() {
                     {registerError && <p className="text-red-500">{error}</p>}
                     <button className='text-bold text-sky-500 m-2 p-2 rounded-md bg-gray-700' type='submit'>Register</button>
                 </form>
-                <p className='flex gap-x-2 justify-between'>
+                <p className='flex gap-x-2 justify-between text-gray-200'>
                     Already have an account? <Link to="/login" className='text-bold text-sky-500'>Login</Link>
                 </p>
             </div>
