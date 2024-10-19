@@ -4,7 +4,8 @@ import QuestionsList from "../components/questionList.jsx";
 import { postRequest } from "../api/api.js";
 import { AppContext } from "../context/Provider";
 import { useNavigate } from "react-router-dom";
-import NavigationBar from "../components/navbarTemplate.jsx";
+import NavbarTemplate from "../components/navbarTemplate.jsx";
+import AdminTable from "../components/adminTable.jsx";
 
 function NewTemplate() {
     const { user, page, reorder, setReorder, questions, setQuestions, setPage } = useContext(AppContext);
@@ -13,6 +14,8 @@ function NewTemplate() {
     const [access, setAccess] = useState("public");
     const [questionType, setQuestionType] = useState();
     const [questionAccess, setQuestionAccess] = useState(true);
+    const [admin,setAdmin] = useState();
+    const [blocked,setBlocked] = useState();
     const navigate = useNavigate();
     const types = ['Line', 'Text', 'Checkbox', 'Number'].map(
         item => ({ label: item, value: item })
@@ -57,11 +60,14 @@ function NewTemplate() {
             "description": description,
             "autor": user.id,
             "access": access,
+            "admin":admin,
+            "blocked": blocked,
             "questions": questions
         }
         const result = await postRequest('/newTemplate', jsonTemplate);
         if (result === "OK") {
             alert("Template Saved");
+            localStorage.removeItem("userTemplates");
             navigate('/profile');
         }
     }
@@ -71,9 +77,15 @@ function NewTemplate() {
             setPage("questions");
         }
     })
+    useEffect(()=>{
+        setPage("configuration");
+    },[user.id])
     return (
         <div>
-            <NavigationBar updateTemplate={saveTemplate} includeForms={false} />
+            <NavbarTemplate includeForms={false} />
+            <HStack className="justify-end p-2 m-2">
+                <Button color="green" appearance="primary" onClick={saveTemplate}>Save Template</Button>
+            </HStack>
             {page === "configuration" && <div className="p-2 m-2 justify-center">
                 <p className="text-bold">Title</p>
                 <Input placeholder="Title" size="lg" onChange={(e) => { setTitle(e) }} />
@@ -81,6 +93,7 @@ function NewTemplate() {
                 <Input placeholder="Description" size="sm" onChange={(e) => { setDescription(e) }} />
                 <p className="text-bold">Access</p>
                 <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
+                <AdminTable setAdmin={setAdmin} setBlocked={setBlocked} admin={admin} blocked={blocked}/>
             </div>}
             {page === "questions" && <div>
                 <HStack className="m-2 p-2" justifyContent="flex-end">

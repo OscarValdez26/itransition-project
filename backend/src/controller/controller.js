@@ -52,8 +52,8 @@ export const logoutUser = async (request, response) => {
 
 export const newTemplate = async (request, response) => {
     try {
-        const { title, description, autor, access, questions } = request.body;
-        const template = `INSERT INTO Templates (title,description,autor,access) VALUES ("${title}","${description}",${autor},"${access}");`;
+        const { title, description, autor, access, questions, admin, blocked } = request.body;
+        const template = `INSERT INTO Templates (title,description,autor,access,admin,blocked) VALUES ("${title}","${description}",${autor},"${access}","${admin}","${blocked}");`;
         const result = await pool.query(template);
         const idTemplate = result[0].insertId;
         const values = queryInsertQuestions(questions, idTemplate);
@@ -67,7 +67,7 @@ export const newTemplate = async (request, response) => {
 export const getAllTemplates = async (request, response) => {
     try {
         const { id } = request.body;
-        const [result] = await pool.query(`SELECT Templates.id,title,description,name FROM Templates INNER JOIN Users ON Templates.autor = Users.id WHERE access LIKE "public" AND autor != ${id};`);
+        const [result] = await pool.query(`SELECT Templates.id,title,description,name,admin,blocked FROM Templates INNER JOIN Users ON Templates.autor = Users.id WHERE access LIKE "public" AND autor != ${id};`);
         return response.json(result);
     } catch (error) {
         return response.status(500).json(error);
@@ -77,7 +77,7 @@ export const getAllTemplates = async (request, response) => {
 export const getTemplate = async (request, response) => {
     try {
         const { id } = request.body;
-        const queryTemplate = `SELECT id,title,description,autor,access FROM Templates WHERE id = ${id};`;
+        const queryTemplate = `SELECT id,title,description,autor,access,admin,blocked FROM Templates WHERE id = ${id};`;
         const queryQuestions = `SELECT id,title,description,question,type,position,visibility,options FROM Questions WHERE template = ${id} ORDER BY position ASC;`;
         const [template] = await pool.query(queryTemplate);
         const [questions] = await pool.query(queryQuestions);
@@ -87,9 +87,10 @@ export const getTemplate = async (request, response) => {
             "description": template[0].description,
             "autor": template[0].autor,
             "access": template[0].access,
+            "admin": template[0].admin,
+            "blocked": template[0].blocked,
             "questions": questions
         };
-        console.log(jsonData);
         return response.json(jsonData);
     } catch (error) {
         return response.status(500).json(error);
@@ -98,8 +99,8 @@ export const getTemplate = async (request, response) => {
 
 export const updateTemplate = async (request, response) => {
     try {
-        const { id, title, description, access, questions, deleted } = request.body;
-        const queryUpdateTemplate = `UPDATE Templates SET title = "${title}", description = "${description}", access = "${access}" WHERE id = ${id}`;
+        const { id, title, description, access, questions, deleted, admin, blocked } = request.body;
+        const queryUpdateTemplate = `UPDATE Templates SET title = "${title}", description = "${description}", access = "${access}",admin = "${admin}",blocked = "${blocked}" WHERE id = ${id}`;
         await pool.query(queryUpdateTemplate);
         const newQuestions = questions.filter(question => !question.id);
         const updated = questions.filter(question => question.id > 0);
@@ -108,16 +109,18 @@ export const updateTemplate = async (request, response) => {
             await pool.query(queryNewQuestions);
         }
         if (updated.length > 0) {
-            updated.forEach(async (question) => {
+            for (const question of updated){
                 const queryUpdateQuestions = `UPDATE Questions SET title = "${question.title}",description = "${question.description}",question = "${question.question}",type = "${question.type}",position = ${question.position},visibility = ${question.visibility},options = "${question.options}" WHERE id = ${question.id}`;
                 await pool.query(queryUpdateQuestions);
-            });
+            }
         }
         if (deleted.length > 0) {
-            deleted.forEach(async (question) => {
+            for (const question of deleted){
+                const queryDeleteAnswers = `DELETE FROM Answers WHERE question = ${question.id}`;
+                await pool.query(queryDeleteAnswers);
                 const queryDeleteQuestions = `DELETE FROM Questions WHERE id = ${question.id}`;
                 await pool.query(queryDeleteQuestions);
-            });
+            }
         }
         return response.json("OK");
     } catch (error) {
@@ -139,7 +142,7 @@ export const deleteTemplate = async (request, response) => {
 export const getUserTemplates = async (request, response) => {
     try {
         const { id } = request.body;
-        const [result] = await pool.query(`SELECT id,title,description,autor,access FROM Templates WHERE autor = ${id};`);
+        const [result] = await pool.query(`SELECT id,title,description,autor,access,admin,blocked FROM Templates WHERE autor = ${id};`);
         response.json(result);
     } catch (error) {
         response.status(500).json(error);
@@ -157,7 +160,7 @@ export const getPopularTemplates = async (request, response) => {
 export const getForms = async (request, response) => {
     try {
         const { id } = request.body;
-        const queryForms = `SELECT DISTINCT Forms.id,name,DATE_FORMAT(date,"%M %e %Y %T") as date FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Users ON Forms.user = Users.id WHERE template = ${id};`;
+        const queryForms = `SELECT DISTINCT Forms.id,name,template,DATE_FORMAT(date,"%M %e %Y %T") as date FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Users ON Forms.user = Users.id WHERE template = ${id};`;
         const [forms] = await pool.query(queryForms);
         const queryAnswers = `SELECT Forms.id,question,value FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Users ON Forms.user = Users.id WHERE template = ${id};`;
         const [answers] = await pool.query(queryAnswers);
@@ -174,13 +177,47 @@ export const getForms = async (request, response) => {
 export const newForm = async (request, response) => {
     try {
         const { template, user, answers } = request.body;
-        const insertForm = `INSERT INTO Forms (template,user) VALUES (${template},${user});`;
+        const checkExist = `SELECT id FROM Forms WHERE template = ${template} AND user = ${user};`;
+        const [exist] = await pool.query(checkExist);
+        if(exist.length === 0){
+            const insertForm = `INSERT INTO Forms (template,user) VALUES (${template},${user});`;
         const result = await pool.query(insertForm);
         const idForm = result[0].insertId;
         const values = queryInsertAnswers(answers, idForm);
         const another_result = await pool.query(values);
-        response.json("OK");
+        return response.json("OK");
+        }
+        return response.json("Form already exist");
     } catch (error) {
+        response.status(500).json(error);
+    }
+}
+
+export const updateForm = async (request, response) => {
+    try{
+        console.log(request.body);
+        const { id, updatedBy, answers, newAnswers } = request.body;
+        const queryUpdateForm = `UPDATE Forms SET updatedBy = ${updatedBy} WHERE id = ${id}`;
+        let result = await pool.query(queryUpdateForm);
+        for (const answer of answers){
+            const queryUpdateAnswers = `UPDATE Answers SET value = "${answer.value}" WHERE form = ${answer.id} AND question = ${answer.question}`;
+            await pool.query(queryUpdateAnswers);
+        }
+        for (const answer of newAnswers){
+            const queryInsertNewAnswers = `INSERT INTO Answers (form, question, value) VALUES (${id},${answer.question},"${answer.value}");`;
+            await pool.query(queryInsertNewAnswers);
+        }
+        response.json("OK");
+    }catch(error){
+        response.status(500).json(error);
+    }
+}
+
+export const getAllUsers = async (request, response) => {
+    try{
+        const [result] = await pool.query(`SELECT id,name,email FROM Users;`);
+        response.json(result);
+    }catch(error){
         response.status(500).json(error);
     }
 }
@@ -241,3 +278,12 @@ const queryInsertTemplate = (title, description, autor, access) => {
 //         response.status(500).json(error);
 //     }
 // }
+
+export const newRoute = async (request, response) => {
+    try{
+        const { algo } = request.body;
+        response.json("OK");
+    }catch(error){
+        response.status(500).json(error);
+    }
+}

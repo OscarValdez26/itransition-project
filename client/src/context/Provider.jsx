@@ -3,28 +3,36 @@ import { createContext, useState } from "react";
 export const AppContext = createContext();
 
 function Provider({ children }) {
-    const getLocalUser = () => {
-        const id = localStorage.getItem("userId");
-        const name = localStorage.getItem("userName");
-        const email = localStorage.getItem("userEmail");
-        if (id && name && email) {
-            const jsonUser = {
-                "id": id,
-                "name": name,
-                "email": email
-            }
-            return (jsonUser);
+    const readLocalObject = (key,isArray) => {
+        const data = localStorage.getItem(key);
+        if(!data) {
+            return isArray ? []:null;
+        }     
+        try {
+            return JSON.parse(data);
+        } catch (error) {
+            console.error('Error in JSON.parse(): ', error);
+            return isArray ? [] : null;
         }
-        return null;
     }
-    const [page,setPage] = useState("mytemplates");
-    const [user, setUser] = useState(getLocalUser);
-    const [userTemplates, setUserTemplates] = useState([]);
-    const [template, setTemplate] = useState();
-    const [questions,setQuestions] = useState([]);
+    const resetState = () => {
+        setPage();
+        setUser();
+        setUserTemplates([])
+        setQuestions([]);
+        setTemplate();
+        setReorder(false);
+        setForm();
+    }
+    const [page,setPage] = useState();
+    const [user, setUser] = useState(readLocalObject("user",false));
+    const [userTemplates, setUserTemplates] = useState(readLocalObject("userTemplates",true));
+    const [template, setTemplate] = useState(readLocalObject("template",false));
+    const [questions,setQuestions] = useState(readLocalObject("questions",true));
     const [reorder,setReorder] = useState(false);
+    const [form,setForm] = useState();
     return (
-        <AppContext.Provider value={{ user, setUser, userTemplates, setUserTemplates, template, setTemplate, page, setPage, questions, setQuestions, reorder, setReorder }}>
+        <AppContext.Provider value={{ user, setUser, userTemplates, setUserTemplates, template, setTemplate, page, setPage, questions, setQuestions, reorder, setReorder, form, setForm, resetState }}>
             {children}
         </AppContext.Provider>
     );

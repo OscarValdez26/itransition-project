@@ -13,10 +13,8 @@ function Login() {
     const onSubmit = handleSubmit(async (values) => {
         const result = await postRequest('/login',values); 
         if(result.id > 0){
+            localStorage.setItem("user",JSON.stringify(result));
             setUser(result);
-            localStorage.setItem("userId",result.id);
-            localStorage.setItem("userName",result.name);
-            localStorage.setItem("userEmail",result.email);
             navigate('/profile');
         }
         else{

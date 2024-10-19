@@ -16,13 +16,13 @@ function TableTemplates() {
             name: 'Title',
             selector: row => row.title,
             sortable: true,
-            grow: 2
+            grow: 2,
         },
         {
             name: 'Description',
             selector: row => row.description,
             sortable: true,
-            grow: 3
+            grow: 3,
         },
         {
             name: 'Access',
@@ -42,14 +42,18 @@ function TableTemplates() {
         const result = await postRequest('/getTemplate', { "id": selectedTemplate.id });
         setTemplate(result);
         setQuestions(result.questions);
+        localStorage.setItem("template",JSON.stringify(result));
+        localStorage.setItem("questions",JSON.stringify(result.questions));
         setPage("configuration");
         navigate('/editTemplate');
     }
-    const rowClicled = async (row) => {
+    const rowClicked = async (row) => {
         setSelectedTemplate(row);
         const result = await postRequest('/getTemplate', { "id": row.id });
         setTemplate(result);
         setQuestions(result.questions);
+        localStorage.setItem("template",JSON.stringify(result));
+        localStorage.setItem("questions",JSON.stringify(result.questions));
         setPage("configuration");
         navigate('/editTemplate');
     }
@@ -73,7 +77,7 @@ function TableTemplates() {
                 onSelectedRowsChange={selectTemplate}
                 columns={columns}
                 data={userTemplates}
-                onRowClicked={rowClicled}
+                onRowClicked={rowClicked}
             />
             <ModalDelete template={selectedTemplate} openModal={openModal} setOpenModal={setOpenModal} />
         </div>

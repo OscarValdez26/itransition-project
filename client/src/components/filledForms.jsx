@@ -1,16 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { postRequest } from "../api/api";
+import { AppContext } from "../context/Provider";
+import { useNavigate } from "react-router-dom";
 
 function FilledForms({id}) {
-    const [forms,setForms] = useState();
-    const rowClicked = (row) => {
-        console.log(row);
+    const { setForm, setTemplate } = useContext(AppContext);
+    const [forms,setForms] = useState(); 
+    const navigate = useNavigate();
+    const rowClicked = async (row) => {
+        setForm(row);
+        const result = await postRequest('/getTemplate',{"id":row.template});
+        setTemplate(result);
+        navigate('/editForm');
     }
     useEffect(()=>{
         const getForms = async () => {
             const result = await postRequest('/getForms',{"id":id});
-            setForms(result)
+            setForms(result);
         }
         getForms();
     },[id])

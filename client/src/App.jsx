@@ -8,6 +8,7 @@ import Profile from './pages/Profile.jsx';
 import NewTemplate from './pages/NewTemplate.jsx';
 import EditTemplate from './pages/EditTemplate.jsx';
 import NewForm from './pages/NewForm.jsx';
+import EditForm from './pages/EditForm.jsx';
 
 function App() {
   //themes light dark high-contrast
@@ -23,6 +24,7 @@ function App() {
           <Route path='/newTemplate' exact element={<NewTemplate />} />
           <Route path='/editTemplate' exact element={<EditTemplate />} />
           <Route path='/newForm' exact element={<NewForm />} />
+          <Route path='/editForm' exact element={<EditForm />} />
         </Route>
       </Routes>
     </BrowserRouter>

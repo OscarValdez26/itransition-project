@@ -3,25 +3,29 @@ import { useContext, useEffect } from "react";
 import { postRequest } from "../api/api.js";
 import { AppContext } from "../context/Provider.jsx";
 import TableTemplates from "../components/tableTemplates.jsx";
-import PublicForms from "../components/publicForms.jsx";
+import PublicTemplates from "../components/publicTemplates.jsx";
 
 function Profile() {
-    const { user, setUserTemplates, page, setPage, setTemplate, setQuestions } = useContext(AppContext);
+    const { user,userTemplates, setUserTemplates, page, setPage, setTemplate, setQuestions } = useContext(AppContext);
     useEffect(()=>{
-        setPage("mytemplates");
-        setTemplate();
-        setQuestions([]);
         const request = async () => {
             const result = await postRequest('/getUserTemplates',{id:user.id});
+            if(!result) return alert("Something went wrong");
+            localStorage.setItem("userTemplates",JSON.stringify(result));
             setUserTemplates(result);
-        }
-        request();
+        }  
+        setPage("myTemplates");
+        setTemplate();
+        setQuestions([]);
+        localStorage.removeItem("template");
+        localStorage.removeItem("questions");
+        if(userTemplates.length === 0) request(); 
     },[user.id]);
     return ( 
         <div>
             <NavigationBar setPage={setPage}/>
-            {page === "mytemplates" && <TableTemplates/>}
-            {page === "forms" && <PublicForms/>}
+            {page === "myTemplates" && <TableTemplates/>}
+            {page === "publicTemplates" && <PublicTemplates/>}
         </div>
      );
 }

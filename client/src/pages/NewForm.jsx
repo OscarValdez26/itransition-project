@@ -25,6 +25,9 @@ function NewForm() {
             alert("Form saved");
             navigate('/profile');
         }
+        else{
+            alert(result);
+        }
     }
     return (
         <div className="p-4 m-4">

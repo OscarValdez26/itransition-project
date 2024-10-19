@@ -15,10 +15,8 @@ function Register() {
             setRegisterError(false);
             const result = await postRequest('/register', values);
             if (result.id > 0) {
+                localStorage.setItem("user",JSON.stringify(result));
                 setUser(result);
-                localStorage.setItem("userId", result.id);
-                localStorage.setItem("userName", result.name);
-                localStorage.setItem("userEmail", result.email);
                 navigate('/profile');
             }
             else {
