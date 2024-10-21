@@ -12,7 +12,7 @@ function EditForm() {
     const [newAnswers,setNewAnswers] = useState([]);
     const navigate = useNavigate();
     const updateAnswers = (newAnswer, idQuestion) => {
-        const existQuestion = answers.some((answer) => answer.question === idQuestion);
+        const existQuestion = answers.find((answer) => answer.question === idQuestion);
         if(existQuestion){
             const updatedAnswers = answers.map((answer ) => idQuestion === answer.question ? { ...answer, value: newAnswer } : { ...answer });
             setAnswers(updatedAnswers);
@@ -39,7 +39,6 @@ function EditForm() {
             "answers": answers,
             "newAnswers": newAnswers
         };
-        console.log(jsonForm);
         const result = await postRequest('/updateForm', jsonForm);
         if (result === "OK") {
             alert("Form saved");

@@ -99,6 +99,7 @@ export const getTemplate = async (request, response) => {
 
 export const updateTemplate = async (request, response) => {
     try {
+        console.log(request.body);
         const { id, title, description, access, questions, deleted, admin, blocked } = request.body;
         const queryUpdateTemplate = `UPDATE Templates SET title = "${title}", description = "${description}", access = "${access}",admin = "${admin}",blocked = "${blocked}" WHERE id = ${id}`;
         await pool.query(queryUpdateTemplate);
@@ -124,6 +125,7 @@ export const updateTemplate = async (request, response) => {
         }
         return response.json("OK");
     } catch (error) {
+        console.error(error);
         return response.status(500).json(error);
     }
 }
@@ -209,6 +211,7 @@ export const updateForm = async (request, response) => {
         }
         response.json("OK");
     }catch(error){
+        console.error(error);
         response.status(500).json(error);
     }
 }

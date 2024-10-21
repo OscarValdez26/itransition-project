@@ -10,28 +10,24 @@ function QuestionAnswered({ question, updateAnswers, answers }) {
             return [stringArray];
         }
         useEffect(()=>{
-            // const getAnswer = () => {
                 const filteredAnswer = answers.find(answer => answer.question === question.id);
+                console.log(question);
+                console.log(filteredAnswer);
                 if(filteredAnswer){
-                    console.log(filteredAnswer);
-                    setAnswer(filteredAnswer);
-                    setPlaceholder(filteredAnswer.value);
+                    setAnswer(filteredAnswer.value);
                     if(question.type === "Checkbox"){
-                        const splitedAnswer = stringToArray(filteredAnswer.value);
-                        setOptions(splitedAnswer);
+                        const splitedAnswers = stringToArray(filteredAnswer.value);
+                        setCheckedOptions(splitedAnswers);
                     } 
                 }    
-            // }
         },[answers]);
     const [checkedOptions, setCheckedOptions] = useState();
-    const [answer,setAnswer] = useState();
-    const [placeholder,setPlaceholder] = useState();
+    const [answer,setAnswer] = useState("");
     const [options, setOptions] = useState(stringToArray(question.options));
     const changeAnswer = (e) => {
         updateAnswers(e,question.id);
     }
     const changeChecked = (value) => {
-        console.log(value);
         setCheckedOptions(value);
         updateAnswers(value.join(","),question.id);
     }
@@ -41,7 +37,7 @@ function QuestionAnswered({ question, updateAnswers, answers }) {
             <Text size={'md'}>{question.title}</Text>
             <Text size={'md'}>{question.description}</Text>
             <Text size={'md'}>{question.question}</Text>
-            {question.type != "Checkbox" && <Input value={placeholder} onChange={changeAnswer}></Input>}
+            {question.type != "Checkbox" && <Input placeholder={answer} defaultValue={""} onChange={changeAnswer}></Input>}
             {question.type === "Checkbox" &&
                 <ul>
                     <CheckboxGroup value={checkedOptions} onChange={changeChecked}>

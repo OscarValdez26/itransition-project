@@ -1,4 +1,5 @@
-const URL = 'http://localhost:3000'
+//const URL = 'https://itransition-project-o3r1.onrender.com/'; // 'http://localhost:3000';
+const URL = import.meta.env.VITE_BACKEND_URL;
 
 export async function postRequest(path,json) {
     try {

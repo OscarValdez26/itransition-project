@@ -9,6 +9,7 @@ function Profile() {
     const { user,userTemplates, setUserTemplates, page, setPage, setTemplate, setQuestions } = useContext(AppContext);
     useEffect(()=>{
         const request = async () => {
+            console.log("Getting User Templates");
             const result = await postRequest('/getUserTemplates',{id:user.id});
             if(!result) return alert("Something went wrong");
             localStorage.setItem("userTemplates",JSON.stringify(result));

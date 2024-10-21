@@ -10,7 +10,7 @@ import FilledForms from "../components/filledForms.jsx";
 import AdminTable from "../components/adminTable.jsx";
 
 function EditTemplate() {
-    const { template, user, page, setPage, reorder, setReorder, questions, setQuestions, setForm} = useContext(AppContext);
+    const { template, user, page, setPage, reorder, setReorder, questions, setQuestions, setForm, setUserTemplates} = useContext(AppContext);
     const [title, setTitle] = useState(template.title);
     const [description, setDescription] = useState(template.description);
     const [access, setAccess] = useState(template.access);
@@ -46,7 +46,6 @@ function EditTemplate() {
         console.log("Original questions: ",questions);
         const update = questions.map(question => question.position === position ? { ...question, title: newTitle, description: newDescription, question: newQuestion, options: newOptions } : question);
         setQuestions(update);
-        console.log(update);
         setReorder(true);
         setPage("");
     };
@@ -55,9 +54,9 @@ function EditTemplate() {
         const deleted = questions[position];
         const reorderedQuestions = filteredQuestions.map((question, index) => ({ ...question, position: index }));
         setQuestions(reorderedQuestions);
-        setDeletedQuestions([...deletedQuestions, deleted]);
         setReorder(true);
         setPage("");
+        if(deleted.id > 0) setDeletedQuestions([...deletedQuestions, deleted]);
     };
     const updateTemplate = async () => {
         if (!questions.length) return alert("The template have not questions");
@@ -76,6 +75,7 @@ function EditTemplate() {
         if (result === "OK") {
             alert("Template updated");
             localStorage.removeItem("userTemplates");
+            setUserTemplates([]);
             navigate('/profile');
         }
         else {
