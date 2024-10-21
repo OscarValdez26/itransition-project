@@ -14,14 +14,12 @@ export const registerUser = async (request, response) => {
             const token = jwt.sign({ email: email }, process.env.SECRET_KEY);
             const [userFound] = await pool.query(`SELECT id,name,email FROM Users WHERE id = ${result[0].insertId}`);
             const user = userFound[0];
-            response.cookie('token', token); //, { sameSite: "none", httpOnly: true, secure: true }); PRODUCCION
+            response.cookie('token', token, { sameSite: "none", httpOnly: true, secure: true }); //PRODUCCION
             return response.json(user);
         }
         return response.json("Something went wrong");
     } catch (error) {
         response.status(500).json(error);
-        //DELETE FROM table WHERE id>0;
-        //ALTER TABLE table AUTO_INCREMENT = 1;
     }
 }
 
@@ -34,7 +32,7 @@ export const loginUser = async (request, response) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return response.json("Password invalid");
         const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY);
-        response.cookie('token', token);//, { sameSite: "none", httpOnly: true, secure: true }); PRODUCCION
+        response.cookie('token', token,{ sameSite: "none", httpOnly: true, secure: true });//, { sameSite: "none", httpOnly: true, secure: true }); PRODUCCION
         return response.json({ "id": user.id, "name": user.name, "email": user.email });
     } catch (error) {
         response.status(500).json(error);
