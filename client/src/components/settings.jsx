@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 function Settings() {
     const { theme, setTheme, lang, setLang } = useContext(AppContext);
     const languages = [{ "label": "Español", "value": "Español" }, { "label": "English", "value": "English" }];
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const getLang = () => {
         switch (lang) {
             case 'es':
@@ -44,12 +44,14 @@ function Settings() {
         }
     }
     return (
-        <HStack>
-            <Text>Theme</Text>
+        <div className='flex justify-end p-2 m-2'>
+            <HStack>
+            <Text>{t('Theme')}</Text>
             <Toggle size={'lg'} checkedChildren="light" unCheckedChildren="dark" defaultChecked={theme === "light"} onChange={changeTheme} />
-            <Text>Language</Text>
+            <Text>{t('Language')}</Text>
             <SelectPicker data={languages} value={lang} onChange={changeLanguage} searchable={false} style={{ width: 224 }} placeholder={defLang} />
         </HStack>
+        </div>     
     );
 }
 

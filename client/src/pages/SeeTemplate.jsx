@@ -5,20 +5,7 @@ import Question from "../components/question.jsx";
 import Markdown from "react-markdown";
 
 function SeeTemplate() {
-    const { template, questions } = useContext(AppContext);
-    const [title, setTitle] = useState(template.title);
-    const [description, setDescription] = useState(template.description);
-    // useEffect(() => {
-    //     if (reorder) {
-    //         setReorder(false);
-    //         setPage("questions"); 
-    //     }
-    // })
-    // useEffect(() => {
-    //     if(!page) setPage("configuration");
-    //     localStorage.removeItem("form");
-    //     setForm();
-    // },[user.id])
+    const { template } = useContext(AppContext);
     return (
         <div className="m-2 p-2">
                 <div className="flex justify-center"><Text className="text-bold m-2 p-2 text-2xl" >{template.title}</Text></div>

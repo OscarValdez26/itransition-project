@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { HStack, Panel, Button, Input, Checkbox, CheckboxGroup } from "rsuite";
 
 function CheckboxAnswer({stringOptions, editOptions}) {
+    const { t } = useTranslation();
     const getOptions = () => {
         if(!stringOptions) return [];
         if(stringOptions.includes(',')){
@@ -25,11 +27,11 @@ function CheckboxAnswer({stringOptions, editOptions}) {
     }
     return (
         <Panel>
-            <h1 className="text-center text-md">Checkbox options</h1>
+            <h1 className="text-center text-md">{t('Options')}</h1>
             <HStack>
                 <Input placeholder="Option value" value={option} onChange={(e) => { setOption(e) }} />
-                <Button onClick={addOption}>Add</Button>
-                <Button onClick={deleteOption}>Delete</Button>
+                <Button onClick={addOption}>{t('Add')}</Button>
+                <Button onClick={deleteOption}>{t('Delete')}</Button>
             </HStack>
             <ul>
                 <CheckboxGroup value={checkedOptions} onChange={value => setCheckedOptions(value)}>

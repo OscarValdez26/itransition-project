@@ -6,9 +6,11 @@ import { AppContext } from "../context/Provider";
 import { useNavigate } from "react-router-dom";
 import NavbarTemplate from "../components/navbarTemplate.jsx";
 import AdminTable from "../components/adminTable.jsx";
+import { useTranslation } from "react-i18next";
 
 function NewTemplate() {
     const { user, page, reorder, setReorder, questions, setQuestions, setPage, availableTopics } = useContext(AppContext);
+    const { t } = useTranslation();
     const [title, setTitle] = useState("Title");
     const [description, setDescription] = useState("No description");
     const [access, setAccess] = useState("public");
@@ -22,7 +24,7 @@ function NewTemplate() {
     const topics = availableTopics.map(item => ({ label: item.topic, value: item.topic }));
     const createQuestion = () => {
         if (!questionType) {
-            alert("Please select question type")
+            alert(t('Select_type'));
         } else {
             const jsonQuestion = {
                 "title": "Title",
@@ -54,7 +56,7 @@ function NewTemplate() {
         setPage("");
     };
     const saveTemplate = async () => {
-        if (!questions.length) return alert("The template have not questions");
+        if (!questions.length) return alert(t('Template_no_questions'));
         const jsonTemplate = {
             "title": title,
             "description": description,
@@ -67,7 +69,7 @@ function NewTemplate() {
         }
         const result = await postRequest('/newTemplate', jsonTemplate);
         if (result === "OK") {
-            alert("Template Saved");
+            alert(t('Template_saved'));
             localStorage.removeItem("userTemplates");
             navigate('/profile');
         }

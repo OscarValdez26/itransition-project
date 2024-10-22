@@ -21,24 +21,20 @@ function Login() {
             navigate('/profile');
         }
         else{
-            setError(result);
+            result === "Password invalid" ? setError(t('Password_invalid')):setError(result);
             setLoginError(true);
         }
     });
 
     return (
-        <div>
-            <div className='flex justify-end p-2 m-2'>
-            <Settings/>
-            </div> 
             <div className='flex justify-center h-screen items-center'>
             <div className='bg-zinc-800 max-w-md p-10 rounded-md'>
                 <h1 className='text-2xl text-bold text-gray-200'>{t('Login')}</h1>
                 <form onSubmit={onSubmit}>
                     <input className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2' {...register("email", { required: true })} type='email' placeholder='Email' />
-                    {errors.email && <p className="text-red-500">Email is required</p>}
+                    {errors.email && <p className="text-red-500">{t('Email_required')}</p>}
                     <input className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2' {...register("password", { required: true })} type='password' placeholder={t('Password')}/>
-                    {errors.password && <p className="text-red-500">Password is required</p>}
+                    {errors.password && <p className="text-red-500">{t('Password_required')}</p>}
                     {loginError && <p className="text-red-500">{error}</p>}
                     <button className='text-bold text-sky-500 m-2 p-2 rounded-md bg-gray-700' type='submit'>{t('Login')}</button>
                 </form>
@@ -46,8 +42,7 @@ function Login() {
                     {t('NoAccount')} <Link to="/register" className='text-bold text-sky-500'>{t('Register')}</Link>
                 </p>
             </div>
-        </div> 
-        </div>     
+        </div>    
     );
 }
 

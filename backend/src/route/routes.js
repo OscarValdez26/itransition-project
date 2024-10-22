@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser,loginUser, logoutUser,getPopularTemplates, newTemplate, getAllTemplates, getTemplate, getUserTemplates, updateTemplate, deleteTemplate, newForm, getForms, getAllUsers, updateForm, getLatestTemplates, getTopics } from "../controller/controller.js";
+import { registerUser,loginUser, logoutUser,getPopularTemplates, newTemplate, getAllTemplates, getTemplate, getUserTemplates, updateTemplate, deleteTemplate, newForm, getForms, getAllUsers, updateForm, getLatestTemplates, getTopics, getUserForms } from "../controller/controller.js";
 import { authRequired, loginSchema, registerSchema, validateSchema } from '../middlewares/validator.js'
 
 const router = Router();
@@ -19,6 +19,7 @@ router.post('/updateTemplate',authRequired,updateTemplate);
 router.post('/deleteTemplate',authRequired,deleteTemplate);
 router.post('/newForm',authRequired,newForm);
 router.post('/getForms',authRequired,getForms);
+router.post('/getUserForms',authRequired,getUserForms);
 router.post('/updateForm',authRequired,updateForm);
 
 export default router;

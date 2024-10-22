@@ -177,9 +177,27 @@ export const getUserTemplates = async (request, response) => {
     }
 }
 
+export const getUserForms = async (request, response) => {
+    try {
+        const { id } = request.body; //user.id
+        const queryForms = `SELECT DISTINCT Templates.title,Templates.topic,Forms.id,template,DATE_FORMAT(date,"%M %e %Y %T") as date FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Templates ON Forms.template = Templates.id WHERE Forms.user = ${id};`;
+        const [forms] = await pool.query(queryForms);
+        const queryAnswers = `SELECT Forms.id,question,value FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Users ON Forms.user = Users.id WHERE user = ${id};`;
+        const [answers] = await pool.query(queryAnswers);
+        const jsonForms = forms.map(form => {
+            const formAnswers = answers.filter(answer => form.id === answer.id);
+            return { ...form, answers: formAnswers };
+        });
+        console.log(jsonForms);
+        response.json(jsonForms);
+    } catch (error) {
+        response.status(500).json(error);
+    }
+}
+
 export const getForms = async (request, response) => {
     try {
-        const { id } = request.body;
+        const { id } = request.body; //template.id
         const queryForms = `SELECT DISTINCT Forms.id,name,template,DATE_FORMAT(date,"%M %e %Y %T") as date FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Users ON Forms.user = Users.id WHERE template = ${id};`;
         const [forms] = await pool.query(queryForms);
         const queryAnswers = `SELECT Forms.id,question,value FROM Forms INNER JOIN Answers ON Forms.id = Answers.form INNER JOIN Users ON Forms.user = Users.id WHERE template = ${id};`;
@@ -188,6 +206,7 @@ export const getForms = async (request, response) => {
             const formAnswers = answers.filter(answer => form.id === answer.id);
             return { ...form, answers: formAnswers };
         });
+        console.log(jsonForms);
         response.json(jsonForms);
     } catch (error) {
         response.status(500).json(error);

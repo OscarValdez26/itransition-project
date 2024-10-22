@@ -3,9 +3,11 @@ import DataTable from "react-data-table-component";
 import { getRequest } from "../api/api";
 import { AppContext } from "../context/Provider";
 import { Button, HStack, Text, SelectPicker } from "rsuite";
+import { useTranslation } from "react-i18next";
 
 function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
     const { user, theme } = useContext(AppContext);
+    const { t } = useTranslation();
     const [allUsers, setAllUsers] = useState([]);
     const [selectedType, setSelectedType] = useState();
     const [clear, setClear] = useState(false);
@@ -54,7 +56,7 @@ function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
     }
     const columns = [
         {
-            name: 'Username',
+            name: t('Username'),
             selector: row => row.name,
             sortable: true,
             grow: 2
@@ -66,7 +68,7 @@ function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
             grow: 2
         },
         {
-            name: 'User Type',
+            name: t('Permissions'),
             selector: row => row.userType,
             sortable: true,
             grow: 1
@@ -74,10 +76,10 @@ function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
     ];
     return (
         <div>
-            <Text className="text-bold m-2 p-2" size={'lg'} align="center">Users</Text>
+            <Text className="text-bold m-2 p-2" size={'lg'} align="center">{t('Users')}</Text>
             <HStack>
-                <SelectPicker data={types} defaultValue={selectedType} onChange={setSelectedType} searchable={false} style={{ width: 224 }} placeholder="User type" />
-                <Button onClick={changeUserType}>Change privileges</Button>
+                <SelectPicker data={types} defaultValue={selectedType} onChange={setSelectedType} searchable={false} style={{ width: 224 }} placeholder={t('Permissions')} />
+                <Button onClick={changeUserType}>{t('Change')} {t('Permissions')}</Button>
             </HStack>
             <DataTable
                 selectableRows

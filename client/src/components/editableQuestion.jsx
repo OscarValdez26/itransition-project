@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Input, Button, Panel, HStack } from "rsuite";
 import CheckboxAnswer from "./checkboxAnswers.jsx";
+import { useTranslation } from "react-i18next";
 
 function EditableQuestion({questionData, onEdit, onDelete}) {
+    const { t } = useTranslation();
     const [title,setTitle] = useState(questionData.title);
     const [description,setDescription] = useState(questionData.description);
     const [question,setQuestion] = useState(questionData.question);
@@ -23,8 +25,8 @@ function EditableQuestion({questionData, onEdit, onDelete}) {
             <Input placeholder={question} size="lg" onChange={(e) => { setQuestion(e) }} />
             {questionData.type == "Checkbox" && <CheckboxAnswer stringOptions={questionData.options} editOptions={editOptions}/>}
             <HStack>
-            <Button onClick={saveQuestion}>Save Question</Button>
-            <Button onClick={deleteQuestion}>Delete Question</Button>
+            <Button onClick={saveQuestion}>{t('Save')} {t('Question')}</Button>
+            <Button onClick={deleteQuestion}>{t('Delete')} {t('Question')}</Button>
             </HStack>            
         </Panel>     
      );

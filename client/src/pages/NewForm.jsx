@@ -5,9 +5,11 @@ import { AppContext } from "../context/Provider";
 import { postRequest } from "../api/api.js";
 import { useNavigate } from "react-router-dom";
 import Markdowm from "react-markdown";
+import { useTranslation } from "react-i18next";
 
 function NewForm() {
     const { user, template } = useContext(AppContext);
+    const { t } = useTranslation();
     const initialAnswers = template.questions.map((question) => ({ "id": question.id, "value": null }));
     const [answers, setAnswers] = useState(initialAnswers);
     const navigate = useNavigate();
@@ -37,7 +39,7 @@ function NewForm() {
             <ul>
                 {template.questions.map((question, index) => <li key={index}><Question question={question} updateAnswers={updateAnswers} index={index} /></li>)}
             </ul>
-            <div className="flex justify-center m-4"><Button onClick={saveAnswers} appearance="primary" color="green">Save answers</Button></div>
+            <div className="flex justify-center m-4"><Button onClick={saveAnswers} appearance="primary" color="green">{t('Save')} {t('Answers')}</Button></div>
         </div>
     );
 }

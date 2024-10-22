@@ -8,9 +8,11 @@ import QuestionsList from "../components/questionList.jsx";
 import ModalDelete from "../components/modalDelete.jsx";
 import FilledForms from "../components/filledForms.jsx";
 import AdminTable from "../components/adminTable.jsx";
+import { useTranslation } from "react-i18next";
 
 function EditTemplate() {
     const { template, user, page, setPage, reorder, setReorder, questions, setQuestions, setForm, setUserTemplates, availableTopics} = useContext(AppContext);
+    const { t } = useTranslation();
     const [title, setTitle] = useState(template.title);
     const [description, setDescription] = useState(template.description);
     const [access, setAccess] = useState(template.access);
@@ -26,7 +28,7 @@ function EditTemplate() {
     const topics = availableTopics.map(item => ({ label: item.topic, value: item.topic }));
     const createQuestion = () => {
         if (!questionType) {
-            alert("Please select question type")
+            alert(t('Select_type'));
         } else {
             const jsonQuestion = {
                 "title": "Title",
@@ -58,7 +60,7 @@ function EditTemplate() {
         if(deleted.id > 0) setDeletedQuestions([...deletedQuestions, deleted]);
     };
     const updateTemplate = async () => {
-        if (!questions.length) return alert("The template have not questions");
+        if (!questions.length) return alert(t('Template_no_questions'));
         const jsonTemplate = {
             "id": template.id,
             "title": title,
@@ -73,13 +75,13 @@ function EditTemplate() {
         }
         const result = await postRequest('/updateTemplate', jsonTemplate);
         if (result === "OK") {
-            alert("Template updated");
+            alert(t('Template_updated'));
             localStorage.removeItem("userTemplates");
             setUserTemplates([]);
             navigate('/profile');
         }
         else {
-            alert("Something went wrong");
+            alert(t('Something_wrong'));
         }
     }
     useEffect(() => {
@@ -97,28 +99,27 @@ function EditTemplate() {
         <div>
             <NavbarTemplate includeForms={true} />
             {page != "forms" && <HStack className="justify-end p-2 m-2">
-                <Button color="green" appearance="primary" onClick={updateTemplate}>Save Template</Button>
-                <Button color="red" appearance="primary" onClick={() => setOpenModal(true)}>Delete Template</Button>
+                <Button color="green" appearance="primary" onClick={updateTemplate}>{t('Save')} {t('Template')}</Button>
+                <Button color="red" appearance="primary" onClick={() => setOpenModal(true)}>{t('Delete')} {t('Template')}</Button>
             </HStack>}
             {page === "configuration" && <div className="p-2 m-2 justify-center">
-                <p className="text-bold">Title</p>
+                <p className="text-bold">{t('Title')}</p>
                 <Input placeholder={template.title} size="lg" onChange={(e) => { setTitle(e) }} />
-                <p className="text-bold">Description</p>
+                <p className="text-bold">{t('Description')}</p>
                 <Input placeholder={template.description} size="sm" onChange={(e) => { setDescription(e) }} />
-                <p className="text-bold">Access</p>
+                <p className="text-bold">{t('Access')}</p>
                 <HStack>
-                <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked={template.access === "public"} onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
-                <SelectPicker data={topics} value={topic} onChange={setTopic} searchable={false} style={{ width: 224 }} placeholder="Template topic"/>
+                <Toggle size={'lg'} color="cyan" checkedChildren={t('Public')} unCheckedChildren={t('Private')} defaultChecked={template.access === "public"} onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
+                <SelectPicker data={topics} value={topic} onChange={setTopic} searchable={false} style={{ width: 224 }} placeholder={t('Topic')}/>
                 </HStack>
                 <AdminTable setAdmin={setAdmin} setBlocked={setBlocked} admin={admin} blocked={blocked} />
             </div>}
             {page === "questions" &&
                 <div>
                     <HStack className="m-2 p-2" justifyContent="flex-end">
-                        <SelectPicker data={types} defaultValue={questionType} onChange={setQuestionType} searchable={false} style={{ width: 224 }} placeholder="Question type" />
+                        <SelectPicker data={types} defaultValue={questionType} onChange={setQuestionType} searchable={false} style={{ width: 224 }} placeholder={t('Question_type')} />
                         <Toggle size={'lg'} color="cyan" checkedChildren="visible" unCheckedChildren="not visible" defaultChecked onChange={(e) => { e ? setQuestionAccess(true) : setQuestionAccess(false) }} />
-                        <Button onClick={createQuestion}>Add Question</Button>
-                        <Button onClick={() => console.log(questions)}>See Question</Button>
+                        <Button onClick={createQuestion}>{t('Add')} {t('Question')}</Button>
                     </HStack>
                     <QuestionsList onEdit={editQuestion} onDelete={deleteQuestion} />
                 </div>

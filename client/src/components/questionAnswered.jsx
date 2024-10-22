@@ -11,8 +11,6 @@ function QuestionAnswered({ question, updateAnswers, answers, readOnly }) {
         }
         useEffect(()=>{
                 const filteredAnswer = answers.find(answer => answer.question === question.id);
-                console.log(question);
-                console.log(filteredAnswer);
                 if(filteredAnswer){
                     setAnswer(filteredAnswer.value);
                     if(question.type === "Checkbox"){

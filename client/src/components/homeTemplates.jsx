@@ -4,14 +4,16 @@ import DataTable from 'react-data-table-component';
 import { AppContext } from "../context/Provider";
 import { useNavigate } from "react-router-dom";
 import { Text, HStack } from "rsuite";
+import { useTranslation } from "react-i18next";
 
 function HomeTemplates({ group }) {
+    const { t } = useTranslation();
     const getTitle = () => {
         switch (group) {
             case '/popular':
-                return "Popular templates";
+                return t('Popular_templates');
             case '/latest':
-                return "Latest templates";
+                return t('Latest_templates');
             default:
                 break;
         }
@@ -29,24 +31,24 @@ function HomeTemplates({ group }) {
     }, []);
     const columns = [
         {
-            name: 'Title',
+            name: t('Title'),
             selector: row => row.title,
             sortable: true,
             grow: 2
         },
         {
-            name: 'Description',
+            name: t('Description'),
             selector: row => row.description,
             sortable: true,
             grow: 3
         },
         {
-            name: 'Autor',
+            name: t('Author'),
             selector: row => row.name,
             sortable: true,
         },
         {
-            name: 'Topic',
+            name: t('Topic'),
             selector: row => row.topic,
             sortable: true,
         },

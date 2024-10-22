@@ -5,9 +5,11 @@ import QuestionAnswered from "../components/questionAnswered.jsx";
 import { useNavigate } from "react-router-dom";
 import { postRequest } from "../api/api.js";
 import Markdown from "react-markdown";
+import { useTranslation } from "react-i18next";
 
 function EditForm() {
     const { user, form, template, setPage } = useContext(AppContext);
+    const { t } = useTranslation();
     const [answers, setAnswers] = useState(form.answers);
     const [newAnswers,setNewAnswers] = useState([]);
     const navigate = useNavigate();
@@ -42,8 +44,8 @@ function EditForm() {
         const result = await postRequest('/updateForm', jsonForm);
         if (result === "OK") {
             alert("Form saved");
-            setPage("forms");
-            navigate('/editTemplate');
+            setPage("myTemplates");
+            navigate('/profile');
         }
         else { 
             alert(result);
@@ -58,7 +60,7 @@ function EditForm() {
             <ul>
                 {template.questions.map((question, index) => <li key={index}><QuestionAnswered question={question} answers={answers} updateAnswers={updateAnswers} /></li>)}
             </ul>
-            <div className="flex justify-center m-4"><Button onClick={saveAnswers} appearance="primary" color="green">Save answers</Button></div>
+            <div className="flex justify-center m-4"><Button onClick={saveAnswers} appearance="primary" color="green">{t('Save')} {t('Answers')}</Button></div>
         </div>
     );
 }
