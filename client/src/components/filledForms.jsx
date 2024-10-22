@@ -5,14 +5,15 @@ import { AppContext } from "../context/Provider";
 import { useNavigate } from "react-router-dom";
 
 function FilledForms({id}) {
-    const { setForm, setTemplate } = useContext(AppContext);
+    const { user, setForm, setTemplate, theme } = useContext(AppContext);
     const [forms,setForms] = useState(); 
     const navigate = useNavigate();
     const rowClicked = async (row) => {
         setForm(row);
+        console.log(row);
         const result = await postRequest('/getTemplate',{"id":row.template});
         setTemplate(result);
-        navigate('/editForm');
+        user.name === row.name ? navigate('/editForm'):navigate('/seeForm');
     }
     useEffect(()=>{
         const getForms = async () => {
@@ -41,6 +42,7 @@ function FilledForms({id}) {
                 columns={columns}
                 data={forms}
                 onRowClicked={rowClicked}
+                theme={theme}
             />
         </div>
      );

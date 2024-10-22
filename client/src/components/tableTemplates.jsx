@@ -7,7 +7,7 @@ import ModalDelete from './modalDelete.jsx';
 import DataTable from 'react-data-table-component';
 
 function TableTemplates() {
-    const { userTemplates, setTemplate, setPage, setQuestions } = useContext(AppContext);
+    const { userTemplates, setTemplate, setPage, setQuestions, theme } = useContext(AppContext);
     const [selectedTemplate, setSelectedTemplate] = useState();
     const [openModal, setOpenModal] = useState(false);
     const navigate = useNavigate();
@@ -27,6 +27,11 @@ function TableTemplates() {
         {
             name: 'Access',
             selector: row => row.access,
+            sortable: true,
+        },
+        {
+            name: 'Topic',
+            selector: row => row.topic,
             sortable: true,
         },
     ];
@@ -50,6 +55,7 @@ function TableTemplates() {
     const rowClicked = async (row) => {
         setSelectedTemplate(row);
         const result = await postRequest('/getTemplate', { "id": row.id });
+        console.log(result);
         setTemplate(result);
         setQuestions(result.questions);
         localStorage.setItem("template",JSON.stringify(result));
@@ -78,6 +84,7 @@ function TableTemplates() {
                 columns={columns}
                 data={userTemplates}
                 onRowClicked={rowClicked}
+                theme={theme}
             />
             <ModalDelete template={selectedTemplate} openModal={openModal} setOpenModal={setOpenModal} />
         </div>

@@ -1,7 +1,7 @@
 import { Divider, VStack, Text, Input, CheckboxGroup, Checkbox } from "rsuite";
 import { useState } from "react";
 
-function Question({ question, updateAnswers, index }) {
+function Question({ question, updateAnswers, index, onlyRead }) {
     const getOptions = () => {
         if (!question.options) return [];
         if (question.options.includes(',')) {
@@ -25,10 +25,10 @@ function Question({ question, updateAnswers, index }) {
             <Text size={'md'}>{question.title}</Text>
             <Text size={'md'}>{question.description}</Text>
             <Text size={'md'}>{question.question}</Text>
-            {question.type != "Checkbox" && <Input placeholder="Answer" onChange={changeAnswer}></Input>}
+            {question.type != "Checkbox" && <Input placeholder="Answer" onChange={changeAnswer} disabled={onlyRead}></Input>}
             {question.type === "Checkbox" &&
                 <ul>
-                    <CheckboxGroup value={checkedOptions} onChange={changeChecked}>
+                    <CheckboxGroup value={checkedOptions} onChange={changeChecked} disabled={onlyRead}>
                         {options.map((option, index) => <li key={index}><Checkbox value={option}>{option}</Checkbox></li>)}
                     </CheckboxGroup>
                 </ul>

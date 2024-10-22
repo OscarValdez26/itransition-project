@@ -31,8 +31,10 @@ function Provider({ children }) {
     const [questions,setQuestions] = useState(readLocalObject("questions",true));
     const [reorder,setReorder] = useState(false);
     const [form,setForm] = useState();
+    const [availableTopics,setAvailableTopics] = useState([]);
+    const [theme,setTheme] = useState("dark");
     return (
-        <AppContext.Provider value={{ user, setUser, userTemplates, setUserTemplates, template, setTemplate, page, setPage, questions, setQuestions, reorder, setReorder, form, setForm, resetState }}>
+        <AppContext.Provider value={{ user, setUser, userTemplates, setUserTemplates, template, setTemplate, page, setPage, questions, setQuestions, reorder, setReorder, form, setForm, resetState, availableTopics, setAvailableTopics, theme, setTheme }}>
             {children}
         </AppContext.Provider>
     );

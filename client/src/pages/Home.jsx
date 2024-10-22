@@ -1,16 +1,18 @@
-import QuestionsList from '../components/questionList.jsx';
+import HomeTemplates from '../components/homeTemplates.jsx';
+import NavbarHome from '../components/navbarHome.jsx';
+import { useContext, useEffect } from 'react';
+import { AppContext } from '../context/Provider.jsx';
 
 function Home() {
-  const questions = [
-    '¿Cuál es tu color favorito?',
-    '¿Cuál es tu comida favorita?',
-    '¿Dónde te gustaría viajar?',
-  ];
-
+  const { page, setPage } = useContext(AppContext);
+  useEffect(()=>{
+    setPage("popularTemplates");
+  },[])
   return (
     <div>
-      <h1>Lista de Preguntas</h1>
-      <QuestionsList questions={questions} />
+      <NavbarHome/>
+      {page === "popularTemplates" && <HomeTemplates group={'/popular'}/>}
+      {page === "latestTemplates" && <HomeTemplates group={'/latest'}/>}
     </div>
   );
 }

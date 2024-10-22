@@ -15,6 +15,7 @@
     "react-data-table-component": "^7.6.2",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.26.2",
     "rsuite": "^5.71.0",
     "sortablejs": "^1.15.3"

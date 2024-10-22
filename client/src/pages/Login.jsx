@@ -24,7 +24,7 @@ function Login() {
     });
 
     return (
-        <div className='flex justify-center h-screen items-center'>
+         <div className='flex justify-center h-screen items-center'>
             <div className='bg-zinc-800 max-w-md p-10 rounded-md'>
                 <h1 className='text-2xl text-bold text-gray-200'>Login</h1>
                 <form onSubmit={onSubmit}>
@@ -39,7 +39,7 @@ function Login() {
                     Do not have an account? <Link to="/register" className='text-bold text-sky-500'>Register</Link>
                 </p>
             </div>
-        </div>
+        </div> 
     );
 }
 

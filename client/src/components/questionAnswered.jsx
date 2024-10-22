@@ -1,7 +1,7 @@
 import { Divider, VStack, Text, Input, CheckboxGroup, Checkbox } from "rsuite";
 import { useEffect, useState } from "react";
 
-function QuestionAnswered({ question, updateAnswers, answers }) {
+function QuestionAnswered({ question, updateAnswers, answers, readOnly }) {
     const stringToArray = (stringArray) => {
             if (!stringArray) return [];
             if (stringArray.includes(',')) {
@@ -37,10 +37,10 @@ function QuestionAnswered({ question, updateAnswers, answers }) {
             <Text size={'md'}>{question.title}</Text>
             <Text size={'md'}>{question.description}</Text>
             <Text size={'md'}>{question.question}</Text>
-            {question.type != "Checkbox" && <Input placeholder={answer} defaultValue={""} onChange={changeAnswer}></Input>}
+            {question.type != "Checkbox" && <Input placeholder={answer} defaultValue={""} onChange={changeAnswer} disabled={readOnly}></Input>}
             {question.type === "Checkbox" &&
                 <ul>
-                    <CheckboxGroup value={checkedOptions} onChange={changeChecked}>
+                    <CheckboxGroup value={checkedOptions} onChange={changeChecked} disabled={readOnly}>
                         {options.map((option, index) => <li key={index}><Checkbox value={option}>{option}</Checkbox></li>)}
                     </CheckboxGroup>
                 </ul>

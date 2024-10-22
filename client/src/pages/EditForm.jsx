@@ -4,10 +4,10 @@ import { AppContext } from "../context/Provider";
 import QuestionAnswered from "../components/questionAnswered.jsx";
 import { useNavigate } from "react-router-dom";
 import { postRequest } from "../api/api.js";
+import Markdown from "react-markdown";
 
 function EditForm() {
     const { user, form, template, setPage } = useContext(AppContext);
-    //const initialAnswers = form.answers.map((answer) => ({ "id": answer.id,"question":answer.question, "value": answer.value }));
     const [answers, setAnswers] = useState(form.answers);
     const [newAnswers,setNewAnswers] = useState([]);
     const navigate = useNavigate();
@@ -45,7 +45,7 @@ function EditForm() {
             setPage("forms");
             navigate('/editTemplate');
         }
-        else {
+        else { 
             alert(result);
         }
     }
@@ -54,7 +54,7 @@ function EditForm() {
             <div className="flex justify-center">
                 <Text className="text-bold" size={'xxl'}>{template.title}</Text>
             </div>
-            <Text className="text-bold m-2" size={'lg'}>{template.description}</Text>
+            <Markdown className="m-2">{template.description}</Markdown>
             <ul>
                 {template.questions.map((question, index) => <li key={index}><QuestionAnswered question={question} answers={answers} updateAnswers={updateAnswers} /></li>)}
             </ul>

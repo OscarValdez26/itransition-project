@@ -5,7 +5,7 @@ import { AppContext } from "../context/Provider";
 import { useNavigate } from "react-router-dom";
 
 function PublicTemplates() {
-    const { user, setTemplate, setQuestions, setPage } = useContext(AppContext);
+    const { user, setTemplate, setQuestions, setPage, theme } = useContext(AppContext);
     const [templates, setTemplates] = useState();
     const navigate = useNavigate();
     useEffect(() => {
@@ -40,6 +40,11 @@ function PublicTemplates() {
             selector: row => row.status,
             sortable: true,
             grow: 1
+        },
+        {
+            name: 'Topic',
+            selector: row => row.topic,
+            sortable: true,
         },
     ];
     const updateRole = (templates) => {    
@@ -77,6 +82,7 @@ function PublicTemplates() {
                 columns={columns}
                 data={templates}
                 onRowClicked={rowClicked}
+                theme={theme}
             />
         </div>
     );

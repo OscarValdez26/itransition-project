@@ -8,7 +8,7 @@ import NavbarTemplate from "../components/navbarTemplate.jsx";
 import AdminTable from "../components/adminTable.jsx";
 
 function NewTemplate() {
-    const { user, page, reorder, setReorder, questions, setQuestions, setPage } = useContext(AppContext);
+    const { user, page, reorder, setReorder, questions, setQuestions, setPage, availableTopics } = useContext(AppContext);
     const [title, setTitle] = useState("Title");
     const [description, setDescription] = useState("No description");
     const [access, setAccess] = useState("public");
@@ -16,10 +16,10 @@ function NewTemplate() {
     const [questionAccess, setQuestionAccess] = useState(true);
     const [admin,setAdmin] = useState();
     const [blocked,setBlocked] = useState();
+    const [topic,setTopic] = useState();
     const navigate = useNavigate();
-    const types = ['Line', 'Text', 'Checkbox', 'Number'].map(
-        item => ({ label: item, value: item })
-    );
+    const types = ['Line', 'Text', 'Checkbox', 'Number'].map(item => ({ label: item, value: item }));
+    const topics = availableTopics.map(item => ({ label: item.topic, value: item.topic }));
     const createQuestion = () => {
         if (!questionType) {
             alert("Please select question type")
@@ -60,6 +60,7 @@ function NewTemplate() {
             "description": description,
             "autor": user.id,
             "access": access,
+            "topic": topic,
             "admin":admin,
             "blocked": blocked,
             "questions": questions
@@ -92,7 +93,11 @@ function NewTemplate() {
                 <p className="text-bold">Description</p>
                 <Input placeholder="Description" size="sm" onChange={(e) => { setDescription(e) }} />
                 <p className="text-bold">Access</p>
+                <HStack>
                 <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
+                    <SelectPicker data={topics} value={topic} onChange={setTopic} searchable={false} style={{ width: 224 }} placeholder="Template topic"/>
+                </HStack>
+                
                 <AdminTable setAdmin={setAdmin} setBlocked={setBlocked} admin={admin} blocked={blocked}/>
             </div>}
             {page === "questions" && <div>

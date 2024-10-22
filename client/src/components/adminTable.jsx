@@ -5,7 +5,7 @@ import { AppContext } from "../context/Provider";
 import { Button, HStack, Text, SelectPicker } from "rsuite";
 
 function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
-    const { user } = useContext(AppContext);
+    const { user, theme } = useContext(AppContext);
     const [allUsers, setAllUsers] = useState([]);
     const [selectedType, setSelectedType] = useState();
     const [clear, setClear] = useState(false);
@@ -85,6 +85,7 @@ function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
                 columns={columns}
                 data={allUsers}
                 clearSelectedRows={clear}
+                theme={theme}
             />
         </div>
     );

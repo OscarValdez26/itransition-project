@@ -10,7 +10,7 @@ import FilledForms from "../components/filledForms.jsx";
 import AdminTable from "../components/adminTable.jsx";
 
 function EditTemplate() {
-    const { template, user, page, setPage, reorder, setReorder, questions, setQuestions, setForm, setUserTemplates} = useContext(AppContext);
+    const { template, user, page, setPage, reorder, setReorder, questions, setQuestions, setForm, setUserTemplates, availableTopics} = useContext(AppContext);
     const [title, setTitle] = useState(template.title);
     const [description, setDescription] = useState(template.description);
     const [access, setAccess] = useState(template.access);
@@ -20,10 +20,10 @@ function EditTemplate() {
     const [openModal, setOpenModal] = useState(false);
     const [admin, setAdmin] = useState(template.admin);
     const [blocked, setBlocked] = useState(template.blocked);
+    const [topic,setTopic] = useState(template.topic);
     const navigate = useNavigate();
-    const types = ['Line', 'Text', 'Checkbox', 'Number'].map(
-        item => ({ label: item, value: item })
-    );
+    const types = ['Line', 'Text', 'Checkbox', 'Number'].map(item => ({ label: item, value: item }));
+    const topics = availableTopics.map(item => ({ label: item.topic, value: item.topic }));
     const createQuestion = () => {
         if (!questionType) {
             alert("Please select question type")
@@ -43,7 +43,6 @@ function EditTemplate() {
         }
     }
     const editQuestion = (position, newTitle, newDescription, newQuestion, newOptions) => {
-        console.log("Original questions: ",questions);
         const update = questions.map(question => question.position === position ? { ...question, title: newTitle, description: newDescription, question: newQuestion, options: newOptions } : question);
         setQuestions(update);
         setReorder(true);
@@ -66,6 +65,7 @@ function EditTemplate() {
             "description": description,
             "autor": user.id,
             "access": access,
+            "topic": topic,
             "questions": questions,
             "deleted": deletedQuestions,
             "admin": admin,
@@ -106,7 +106,10 @@ function EditTemplate() {
                 <p className="text-bold">Description</p>
                 <Input placeholder={template.description} size="sm" onChange={(e) => { setDescription(e) }} />
                 <p className="text-bold">Access</p>
+                <HStack>
                 <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked={template.access === "public"} onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
+                <SelectPicker data={topics} value={topic} onChange={setTopic} searchable={false} style={{ width: 224 }} placeholder="Template topic"/>
+                </HStack>
                 <AdminTable setAdmin={setAdmin} setBlocked={setBlocked} admin={admin} blocked={blocked} />
             </div>}
             {page === "questions" &&
