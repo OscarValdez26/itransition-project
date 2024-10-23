@@ -12,6 +12,7 @@ function NewForm() {
     const { t } = useTranslation();
     const initialAnswers = template.questions.map((question) => ({ "id": question.id, "value": null }));
     const [answers, setAnswers] = useState(initialAnswers);
+    const [url,setUrl] = useState(template.image);
     const navigate = useNavigate();
     const updateAnswers = (newAnswer, indexAnswer) => {
         const newAnswers = answers.map((answer, index) => indexAnswer === index ? { ...answer, value: newAnswer } : { ...answer });
@@ -34,6 +35,7 @@ function NewForm() {
     }
     return (
         <div className="m-2 p-2">
+            {url && <img src={url} alt="Uploaded" style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }} />}
             <div className="flex justify-center"><Text className="text-bold m-2 p-2 text-2xl">{template.title}</Text></div>
             <Markdowm className="m-2 text-xl">{template.description}</Markdowm>
             <ul>

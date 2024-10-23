@@ -50,8 +50,8 @@ export const logoutUser = async (request, response) => {
 
 export const newTemplate = async (request, response) => {
     try {
-        const { title, description, autor, access, topic, questions, admin, blocked } = request.body;
-        const template = `INSERT INTO Templates (title,description,autor,access,topic,admin,blocked) VALUES ("${title}","${description}",${autor},"${access}","${topic}","${admin}","${blocked}");`;
+        const { title, description, autor, access, topic, image, tags, questions, admin, blocked } = request.body;
+        const template = `INSERT INTO Templates (title,description,autor,access,topic,image,tags,admin,blocked) VALUES ("${title}","${description}",${autor},"${access}","${topic}","${image}","${tags}","${admin}","${blocked}");`;
         const result = await pool.query(template);
         const idTemplate = result[0].insertId;
         const values = queryInsertQuestions(questions, idTemplate);
@@ -61,7 +61,6 @@ export const newTemplate = async (request, response) => {
         return response.status(500).json(error);
     }
 }
-
 
 export const getPopularTemplates = async (request, response) => {
     try {
@@ -93,7 +92,7 @@ export const getTopics = async (request, response) => {
 export const getAllTemplates = async (request, response) => {
     try {
         const { id } = request.body;
-        const [result] = await pool.query(`SELECT Templates.id,title,description,topic,name,admin,blocked FROM Templates INNER JOIN Users ON Templates.autor = Users.id WHERE access LIKE "public" AND autor != ${id};`);
+        const [result] = await pool.query(`SELECT Templates.id,title,description,topic,image,tags,name,admin,blocked FROM Templates INNER JOIN Users ON Templates.autor = Users.id WHERE access LIKE "public" AND autor != ${id};`);
         return response.json(result);
     } catch (error) {
         return response.status(500).json(error);
@@ -103,7 +102,7 @@ export const getAllTemplates = async (request, response) => {
 export const getTemplate = async (request, response) => {
     try {
         const { id } = request.body;
-        const queryTemplate = `SELECT id,title,description,autor,access,topic,admin,blocked FROM Templates WHERE id = ${id};`;
+        const queryTemplate = `SELECT id,title,description,autor,access,topic,image,tags,admin,blocked FROM Templates WHERE id = ${id};`;
         const queryQuestions = `SELECT id,title,description,question,type,position,visibility,options FROM Questions WHERE template = ${id} ORDER BY position ASC;`;
         const [template] = await pool.query(queryTemplate);
         const [questions] = await pool.query(queryQuestions);
@@ -114,6 +113,8 @@ export const getTemplate = async (request, response) => {
             "autor": template[0].autor,
             "access": template[0].access,
             "topic": template[0].topic,
+            "image": template[0].image,
+            "tags": template[0].tags,
             "admin": template[0].admin,
             "blocked": template[0].blocked,
             "questions": questions
@@ -126,8 +127,8 @@ export const getTemplate = async (request, response) => {
 
 export const updateTemplate = async (request, response) => {
     try {
-        const { id, title, description, access, topic, questions, deleted, admin, blocked } = request.body;
-        const queryUpdateTemplate = `UPDATE Templates SET title = "${title}", description = "${description}", access = "${access}", topic = "${topic}", admin = "${admin}",blocked = "${blocked}" WHERE id = ${id}`;
+        const { id, title, description, access, topic, image, tags, questions, deleted, admin, blocked } = request.body;
+        const queryUpdateTemplate = `UPDATE Templates SET title = "${title}", description = "${description}", access = "${access}", topic = "${topic}", image = "${image}", tags = "${tags}", admin = "${admin}",blocked = "${blocked}" WHERE id = ${id}`;
         await pool.query(queryUpdateTemplate);
         const newQuestions = questions.filter(question => !question.id);
         const updated = questions.filter(question => question.id > 0);
@@ -170,7 +171,7 @@ export const deleteTemplate = async (request, response) => {
 export const getUserTemplates = async (request, response) => {
     try {
         const { id } = request.body;
-        const [result] = await pool.query(`SELECT id,title,description,autor,access,topic,admin,blocked FROM Templates WHERE autor = ${id};`);
+        const [result] = await pool.query(`SELECT id,title,description,autor,access,topic,tags,image,admin,blocked FROM Templates WHERE autor = ${id};`);
         response.json(result);
     } catch (error) {
         response.status(500).json(error);

@@ -70,6 +70,12 @@ i18n
           You_blocked: "Sorry you are blocked from this template",
           Password_invalid: "Password invalid",
           Already_exist: "User already exist",
+          Upload: "Upload",
+          Loading: "Loading",
+          Select_image: "Select image",
+          No_file_selected: "No file selected",
+          Image: "Image",
+          Select_image_please: "Please select an image"
           // Otras traducciones...
         }
       }, 
@@ -137,6 +143,12 @@ i18n
           You_blocked: "Usted esta bloqueado de esta plantilla",
           Password_invalid: "Contraseña incorrecta",
           Already_exist: "El usuario ya existe",
+          Upload: "Subir",
+          Loading: "Cargando",
+          Select_image: "Seleccione imagen",
+          No_file_selected: "Ningun archivo seleccionado",
+          Image: "Imagen",
+          Select_image_please: "Por favor selecciona una imagen"
           // Otras traducciones...
         }
       }

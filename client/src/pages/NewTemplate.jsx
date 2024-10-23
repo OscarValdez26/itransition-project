@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { Input, Toggle, SelectPicker, Button, HStack } from "rsuite";
+import { Input, Toggle, SelectPicker, Button, HStack, TagInput } from "rsuite";
 import QuestionsList from "../components/questionList.jsx";
 import { postRequest } from "../api/api.js";
 import { AppContext } from "../context/Provider";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import NavbarTemplate from "../components/navbarTemplate.jsx";
 import AdminTable from "../components/adminTable.jsx";
 import { useTranslation } from "react-i18next";
+import ImageUpload from "../components/imageUpload.jsx";
 
 function NewTemplate() {
     const { user, page, reorder, setReorder, questions, setQuestions, setPage, availableTopics } = useContext(AppContext);
@@ -19,6 +20,8 @@ function NewTemplate() {
     const [admin,setAdmin] = useState();
     const [blocked,setBlocked] = useState();
     const [topic,setTopic] = useState();
+    const [url,setUrl] = useState("");
+    const [tags, setTags] = useState("");
     const navigate = useNavigate();
     const types = ['Line', 'Text', 'Checkbox', 'Number'].map(item => ({ label: item, value: item }));
     const topics = availableTopics.map(item => ({ label: item.topic, value: item.topic }));
@@ -63,10 +66,13 @@ function NewTemplate() {
             "autor": user.id,
             "access": access,
             "topic": topic,
+            "image": url,
+            "tags": tags,
             "admin":admin,
             "blocked": blocked,
             "questions": questions
         }
+        console.log(jsonTemplate);
         const result = await postRequest('/newTemplate', jsonTemplate);
         if (result === "OK") {
             alert(t('Template_saved'));
@@ -89,6 +95,7 @@ function NewTemplate() {
             <HStack className="justify-end p-2 m-2">
                 <Button color="green" appearance="primary" onClick={saveTemplate}>Save Template</Button>
             </HStack>
+            {url && <img src={url} alt="Uploaded" style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }} />}
             {page === "configuration" && <div className="p-2 m-2 justify-center">
                 <p className="text-bold">Title</p>
                 <Input placeholder="Title" size="lg" onChange={(e) => { setTitle(e) }} />
@@ -99,7 +106,9 @@ function NewTemplate() {
                 <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
                     <SelectPicker data={topics} value={topic} onChange={setTopic} searchable={false} style={{ width: 224 }} placeholder="Template topic"/>
                 </HStack>
-                
+                <ImageUpload setUrl={setUrl}/>
+                <p className="text-bold">{t('Tags')}</p>
+                <TagInput style={{ width: 300 }} onChange={(e) => {setTags(e.join(','))}}/>
                 <AdminTable setAdmin={setAdmin} setBlocked={setBlocked} admin={admin} blocked={blocked}/>
             </div>}
             {page === "questions" && <div>

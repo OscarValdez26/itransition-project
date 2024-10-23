@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Input, Toggle, SelectPicker, Button, HStack } from "rsuite";
+import { Input, Toggle, SelectPicker, Button, HStack, TagInput } from "rsuite";
 import { postRequest } from "../api/api.js";
 import { AppContext } from "../context/Provider.jsx";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import ModalDelete from "../components/modalDelete.jsx";
 import FilledForms from "../components/filledForms.jsx";
 import AdminTable from "../components/adminTable.jsx";
 import { useTranslation } from "react-i18next";
+import ImageUpload from "../components/imageUpload.jsx";
 
 function EditTemplate() {
     const { template, user, page, setPage, reorder, setReorder, questions, setQuestions, setForm, setUserTemplates, availableTopics} = useContext(AppContext);
@@ -23,6 +24,16 @@ function EditTemplate() {
     const [admin, setAdmin] = useState(template.admin);
     const [blocked, setBlocked] = useState(template.blocked);
     const [topic,setTopic] = useState(template.topic);
+    const [url,setUrl] = useState(template.image);
+    const getTags = () => {
+        if (!template.tags) return [];
+        if (template.tags.includes(',')) {
+            return template.tags.split(',');
+        }
+        return [template.tags];
+    }
+    const [defTags, setDefTags] = useState(getTags);
+    const [tags,setTags] = useState(template.tags);
     const navigate = useNavigate();
     const types = ['Line', 'Text', 'Checkbox', 'Number'].map(item => ({ label: item, value: item }));
     const topics = availableTopics.map(item => ({ label: item.topic, value: item.topic }));
@@ -68,6 +79,8 @@ function EditTemplate() {
             "autor": user.id,
             "access": access,
             "topic": topic,
+            "image": url,
+            "tags": tags,
             "questions": questions,
             "deleted": deletedQuestions,
             "admin": admin,
@@ -102,16 +115,20 @@ function EditTemplate() {
                 <Button color="green" appearance="primary" onClick={updateTemplate}>{t('Save')} {t('Template')}</Button>
                 <Button color="red" appearance="primary" onClick={() => setOpenModal(true)}>{t('Delete')} {t('Template')}</Button>
             </HStack>}
+            {url && <img src={url} alt="Uploaded" style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }} />}
             {page === "configuration" && <div className="p-2 m-2 justify-center">
                 <p className="text-bold">{t('Title')}</p>
                 <Input placeholder={template.title} size="lg" onChange={(e) => { setTitle(e) }} />
                 <p className="text-bold">{t('Description')}</p>
                 <Input placeholder={template.description} size="sm" onChange={(e) => { setDescription(e) }} />
-                <p className="text-bold">{t('Access')}</p>
+                <p className="text-bold">{t('Access')} - {t('Topic')}</p>
                 <HStack>
                 <Toggle size={'lg'} color="cyan" checkedChildren={t('Public')} unCheckedChildren={t('Private')} defaultChecked={template.access === "public"} onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
                 <SelectPicker data={topics} value={topic} onChange={setTopic} searchable={false} style={{ width: 224 }} placeholder={t('Topic')}/>
                 </HStack>
+                <ImageUpload setUrl={setUrl}/>
+                <p className="text-bold">{t('Tags')}</p>
+                <TagInput style={{ width: 300 }} defaultValue={defTags} onChange={(e) => {setTags(e.join(','))}}/>
                 <AdminTable setAdmin={setAdmin} setBlocked={setBlocked} admin={admin} blocked={blocked} />
             </div>}
             {page === "questions" &&
