@@ -41,7 +41,7 @@ export const loginUser = async (request, response) => {
 
 export const logoutUser = async (request, response) => {
     try {
-        response.cookie('token', " ");
+        response.cookie('token', " ", { sameSite: "none", httpOnly: true, secure: true });
         response.json("Logout OK");
     } catch (error) {
         response.status(500).json(error);
