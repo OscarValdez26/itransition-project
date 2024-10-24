@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { postRequest } from '../api/api';
 import { useContext, useState } from 'react';
 import { AppContext } from '../context/Provider';
-import Settings from '../components/settings';
 import { useTranslation } from 'react-i18next';
 
 function Login() {

@@ -93,17 +93,17 @@ function NewTemplate() {
         <div>
             <NavbarTemplate includeForms={false} />
             <HStack className="justify-end p-2 m-2">
-                <Button color="green" appearance="primary" onClick={saveTemplate}>Save Template</Button>
+                <Button color="green" appearance="primary" onClick={saveTemplate}>{t('Save')} {t('Template')}</Button> 
             </HStack>
             {page === "configuration" && <div className="p-2 m-2 justify-center">
                 {url && <img src={url} alt="Uploaded" style={{ width: '100%', maxHeight: '300px', objectFit: 'cover', objectPosition: 'center' }} />}
-                <p className="text-bold">Title</p>
+                <p className="text-bold">{t('Title')}</p>
                 <Input placeholder="Title" size="lg" onChange={(e) => { setTitle(e) }} />
-                <p className="text-bold">Description</p>
+                <p className="text-bold">{t('Description')}</p>
                 <Input placeholder="Description" size="sm" onChange={(e) => { setDescription(e) }} />
-                <p className="text-bold">Access</p>
+                <p className="text-bold">{t('Access')} - {t('Topic')}</p>
                 <HStack>
-                <Toggle size={'lg'} color="cyan" checkedChildren="public" unCheckedChildren="private" defaultChecked onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
+                <Toggle size={'lg'} color="cyan" checkedChildren={t('Public')} unCheckedChildren={t('Private')} defaultChecked onChange={(e) => { e ? setAccess("public") : setAccess("private") }} />
                     <SelectPicker data={topics} value={topic} onChange={setTopic} searchable={false} style={{ width: 224 }} placeholder="Template topic"/>
                 </HStack>
                 <ImageUpload setUrl={setUrl}/>
@@ -113,9 +113,9 @@ function NewTemplate() {
             </div>}
             {page === "questions" && <div>
                 <HStack className="m-2 p-2" justifyContent="flex-end">
-                    <SelectPicker data={types} value={questionType} onChange={setQuestionType} searchable={false} style={{ width: 224 }} placeholder="Question type" />
+                    <SelectPicker data={types} value={questionType} onChange={setQuestionType} searchable={false} style={{ width: 224 }} placeholder={t('Question_type')}  />
                     <Toggle size={'lg'} color="cyan" checkedChildren="visible" unCheckedChildren="not visible" defaultChecked onChange={(e) => { e ? setQuestionAccess(true) : setQuestionAccess(false) }} />
-                    <Button onClick={createQuestion}>Add Question</Button>
+                    <Button onClick={createQuestion}>{t('Add')} {t('Question')}</Button>
                 </HStack>
                 <QuestionsList onEdit={editQuestion} onDelete={deleteQuestion} />
             </div>}

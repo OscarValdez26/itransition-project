@@ -1,7 +1,7 @@
 import NavigationBar from "../components/navbarProfile.jsx";
 import { useContext, useEffect } from "react";
 import { getRequest, postRequest } from "../api/api.js";
-import { AppContext } from "../context/Provider.jsx";
+import { AppContext } from "../context/Provider.jsx"; 
 import TableTemplates from "../components/tableTemplates.jsx";
 import PublicTemplates from "../components/publicTemplates.jsx";
 import TableForms from "../components/tableForms.jsx";
@@ -13,13 +13,13 @@ function Profile() {
     useEffect(()=>{
         const request = async () => {
             const result = await postRequest('/getUserTemplates',{id:user.id});
-            if(!result) return alert(t('Something_wrong'));
+            if(!result) return console.log(t('Something_wrong'));
             localStorage.setItem("userTemplates",JSON.stringify(result));
             setUserTemplates(result);
         }
         const requestTopics = async () => {
             const result = await getRequest('/topics');
-            if(!result) return alert(t('Something_wrong'));
+            if(!result) return console.log(t('Something_wrong'));
             localStorage.setItem("availableTopics",JSON.stringify(result));
             setAvailableTopics(result);
         } 

@@ -4,7 +4,7 @@ import { AppContext } from '../context/Provider.jsx';
 import { useTranslation } from 'react-i18next';
 
 function NavbarTemplate({includeForms}) {
-    const { user, setPage } = useContext(AppContext);
+    const { setPage } = useContext(AppContext);
     const { t } = useTranslation();
     const [showForms,setShowForms] = useState(includeForms);
     return ( 

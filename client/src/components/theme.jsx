@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-import { HStack, Toggle, Text, SelectPicker } from "rsuite";
+import { useContext } from "react";
+import { Toggle, Text } from "rsuite";
 import { AppContext } from "../context/Provider";
 import { useTranslation } from "react-i18next";
 

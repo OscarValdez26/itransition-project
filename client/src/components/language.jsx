@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { HStack, Toggle, Text } from "rsuite";
+import { Toggle, Text } from "rsuite";
 import { AppContext } from "../context/Provider";
 import { useTranslation } from "react-i18next";
 
@@ -7,7 +7,6 @@ function Language() {
     const { lang, setLang } = useContext(AppContext);
     const { t, i18n } = useTranslation();
     const changeLanguage = (e) => {
-        console.log(e);
         if (e) {
             setLang("en");
             localStorage.setItem('lang', 'en');
