@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import ImageUpload from "../components/imageUpload.jsx";
 
 function NewTemplate() {
-    const { user, page, reorder, setReorder, questions, setQuestions, setPage, availableTopics } = useContext(AppContext);
+    const { user, page, reorder, setReorder, questions, setQuestions, setPage, availableTopics, setUserTemplates } = useContext(AppContext);
     const { t } = useTranslation();
     const [title, setTitle] = useState("Title");
     const [description, setDescription] = useState("No description");
@@ -72,11 +72,11 @@ function NewTemplate() {
             "blocked": blocked,
             "questions": questions
         }
-        console.log(jsonTemplate);
         const result = await postRequest('/newTemplate', jsonTemplate);
         if (result === "OK") {
             alert(t('Template_saved'));
             localStorage.removeItem("userTemplates");
+            setUserTemplates([]);
             navigate('/profile');
         }
     }
@@ -116,7 +116,6 @@ function NewTemplate() {
                     <SelectPicker data={types} value={questionType} onChange={setQuestionType} searchable={false} style={{ width: 224 }} placeholder="Question type" />
                     <Toggle size={'lg'} color="cyan" checkedChildren="visible" unCheckedChildren="not visible" defaultChecked onChange={(e) => { e ? setQuestionAccess(true) : setQuestionAccess(false) }} />
                     <Button onClick={createQuestion}>Add Question</Button>
-                    <Button onClick={() => { console.log(questions) }}>See Question</Button>
                 </HStack>
                 <QuestionsList onEdit={editQuestion} onDelete={deleteQuestion} />
             </div>}
