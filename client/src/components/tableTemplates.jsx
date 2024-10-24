@@ -79,6 +79,7 @@ function TableTemplates() {
                     <Button className='mx-4' appearance='primary' color='red' onClick={deleteTemplate}>{t('Delete')}</Button>
                 </HStack>
             </div>
+            <div className='overflow-scroll' style={{'maxHeight':'600px'}}>
             <DataTable
                 selectableRows
                 selectableRowsSingle
@@ -88,6 +89,7 @@ function TableTemplates() {
                 onRowClicked={rowClicked}
                 theme={theme}
             />
+            </div>
             <ModalDelete template={selectedTemplate} openModal={openModal} setOpenModal={setOpenModal} />
         </div>
     );

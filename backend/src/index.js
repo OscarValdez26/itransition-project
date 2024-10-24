@@ -1,5 +1,9 @@
 import app from "./app.js";
-const PORT = process.env.PORT || 3000;
+import http from 'http'
+import createWSS from "./controller/socketServer.js";
+const PORT = process.env.PORT || 3001;
 
-app.listen(PORT);
+const server = http.createServer(app);
+createWSS(server);
+server.listen(PORT);
 console.log("Server listen on port: ", PORT);

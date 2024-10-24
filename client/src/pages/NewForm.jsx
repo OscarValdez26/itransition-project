@@ -6,6 +6,7 @@ import { postRequest } from "../api/api.js";
 import { useNavigate } from "react-router-dom";
 import Markdowm from "react-markdown";
 import { useTranslation } from "react-i18next";
+import LikeComments from '../components/likeComents.jsx'
 
 function NewForm() {
     const { user, template } = useContext(AppContext);
@@ -42,6 +43,7 @@ function NewForm() {
                 {template.questions.map((question, index) => <li key={index}><Question question={question} updateAnswers={updateAnswers} index={index} /></li>)}
             </ul>
             <div className="flex justify-center m-4"><Button onClick={saveAnswers} appearance="primary" color="green">{t('Save')} {t('Answers')}</Button></div>
+            <LikeComments/>
         </div>
     );
 }

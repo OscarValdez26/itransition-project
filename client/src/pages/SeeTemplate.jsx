@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { VStack, Input, Text } from "rsuite";
+import { Text } from "rsuite";
 import { AppContext } from "../context/Provider.jsx";
 import Question from "../components/question.jsx";
 import Markdown from "react-markdown";

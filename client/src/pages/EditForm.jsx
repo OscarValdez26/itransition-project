@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { postRequest } from "../api/api.js";
 import Markdown from "react-markdown";
 import { useTranslation } from "react-i18next";
+import LikeComments from "../components/likeComents.jsx";
 
 function EditForm() {
     const { user, form, template, setPage } = useContext(AppContext);
@@ -61,6 +62,7 @@ function EditForm() {
                 {template.questions.map((question, index) => <li key={index}><QuestionAnswered question={question} answers={answers} updateAnswers={updateAnswers} /></li>)}
             </ul>
             <div className="flex justify-center m-4"><Button onClick={saveAnswers} appearance="primary" color="green">{t('Save')} {t('Answers')}</Button></div>
+            <LikeComments/>
         </div>
     );
 }

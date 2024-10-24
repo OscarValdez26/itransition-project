@@ -38,7 +38,7 @@ function FilledForms({id}) {
         },
     ];
     return ( 
-        <div>
+        <div className='overflow-scroll' style={{'maxHeight': '600px'}}>
             <DataTable
                 columns={columns}
                 data={forms}

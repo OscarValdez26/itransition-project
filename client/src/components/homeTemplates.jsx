@@ -64,12 +64,14 @@ function HomeTemplates({ group }) {
             <HStack className="m-2 p-2" justifyContent="center">
                 <Text size={'lg'} >{title}</Text>
             </HStack>
+            <div className='overflow-scroll' style={{'maxHeight':'600px'}}>
             <DataTable
                 columns={columns}
                 data={templates}
                 onRowClicked={rowClicked}
                 theme={theme}
             />
+            </div>
         </div>
     );
 }

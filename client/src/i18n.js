@@ -75,7 +75,12 @@ i18n
           Select_image: "Select image",
           No_file_selected: "No file selected",
           Image: "Image",
-          Select_image_please: "Please select an image"
+          Select_image_please: "Please select an image",
+          Comments: "Comments",
+          Likes: "Likes",
+          Dislikes: "Dislikes",
+          Add_comment: "Add comment",
+          Write_comment: "Write comment"
           // Otras traducciones...
         }
       }, 
@@ -148,7 +153,12 @@ i18n
           Select_image: "Seleccione imagen",
           No_file_selected: "Ningun archivo seleccionado",
           Image: "Imagen",
-          Select_image_please: "Por favor selecciona una imagen"
+          Select_image_please: "Por favor selecciona una imagen",
+          Comments: "Comentarios",
+          Likes: "Me gusta",
+          Dislikes: "No me gusta",
+          Add_comment: "Agregar comentario",
+          Write_comment: "Escribe un comentario"
           // Otras traducciones...
         }
       }

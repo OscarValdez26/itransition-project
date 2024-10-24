@@ -81,6 +81,7 @@ function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
                 <SelectPicker data={types} defaultValue={selectedType} onChange={setSelectedType} searchable={false} style={{ width: 224 }} placeholder={t('Permissions')} />
                 <Button onClick={changeUserType}>{t('Change')} {t('Permissions')}</Button>
             </HStack>
+            <div className='overflow-scroll' style={{'maxHeight': '600px'}}>
             <DataTable
                 selectableRows
                 onSelectedRowsChange={changeSelectedUsers}
@@ -89,6 +90,8 @@ function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
                 clearSelectedRows={clear}
                 theme={theme}
             />
+            </div>
+            
         </div>
     );
 }

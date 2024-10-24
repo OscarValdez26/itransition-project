@@ -10,6 +10,7 @@ import FilledForms from "../components/filledForms.jsx";
 import AdminTable from "../components/adminTable.jsx";
 import { useTranslation } from "react-i18next";
 import ImageUpload from "../components/imageUpload.jsx";
+import LikeComments from "../components/likeComents.jsx";
 
 function EditTemplate() {
     const { template, user, page, setPage, reorder, setReorder, questions, setQuestions, setForm, setUserTemplates, availableTopics} = useContext(AppContext);
@@ -115,8 +116,8 @@ function EditTemplate() {
                 <Button color="green" appearance="primary" onClick={updateTemplate}>{t('Save')} {t('Template')}</Button>
                 <Button color="red" appearance="primary" onClick={() => setOpenModal(true)}>{t('Delete')} {t('Template')}</Button>
             </HStack>}
-            {url && <img src={url} alt="Uploaded" style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }} />}
             {page === "configuration" && <div className="p-2 m-2 justify-center">
+                {url && <img src={url} alt="Uploaded" style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }} />}
                 <p className="text-bold">{t('Title')}</p>
                 <Input placeholder={template.title} size="lg" onChange={(e) => { setTitle(e) }} />
                 <p className="text-bold">{t('Description')}</p>
@@ -130,6 +131,7 @@ function EditTemplate() {
                 <p className="text-bold">{t('Tags')}</p>
                 <TagInput style={{ width: 300 }} defaultValue={defTags} onChange={(e) => {setTags(e.join(','))}}/>
                 <AdminTable setAdmin={setAdmin} setBlocked={setBlocked} admin={admin} blocked={blocked} />
+                <LikeComments/>
             </div>}
             {page === "questions" &&
                 <div>

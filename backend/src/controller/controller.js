@@ -56,6 +56,7 @@ export const newTemplate = async (request, response) => {
         const idTemplate = result[0].insertId;
         const values = queryInsertQuestions(questions, idTemplate);
         const another_result = await pool.query(values);
+        const setLikes = await pool.query(`INSERT INTO Likes (template,likes,dislikes) VALUES (${idTemplate},0,0);`);
         return response.json("OK");
     } catch (error) {
         return response.status(500).json(error);
