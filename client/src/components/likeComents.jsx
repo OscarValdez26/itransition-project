@@ -55,7 +55,7 @@ const LikeComments = () => {
 
 
   useEffect(() => {
-    const socket = new WebSocket('ws://localhost:3001');
+    const socket = new WebSocket(import.meta.env.VITE_WS_URL);
     socket.onopen = () => {
       const payload = { "template": template.id };
       socket.send(JSON.stringify({ type: 'GET_COMMENTS', payload: payload }));
