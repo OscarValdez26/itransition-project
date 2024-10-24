@@ -80,7 +80,8 @@ i18n
           Likes: "Likes",
           Dislikes: "Dislikes",
           Add_comment: "Add comment",
-          Write_comment: "Write comment"
+          Write_comment: "Write comment",
+          Popular_tags: "Popular tags"
           // Otras traducciones...
         }
       }, 
@@ -158,7 +159,8 @@ i18n
           Likes: "Me gusta",
           Dislikes: "No me gusta",
           Add_comment: "Agregar comentario",
-          Write_comment: "Escribe un comentario"
+          Write_comment: "Escribe un comentario",
+          Popular_tags: "Tags populares"
           // Otras traducciones...
         }
       }

@@ -57,7 +57,6 @@ function TableTemplates() {
     const rowClicked = async (row) => {
         setSelectedTemplate(row);
         const result = await postRequest('/getTemplate', { "id": row.id });
-        console.log(result);
         setTemplate(result);
         setQuestions(result.questions);
         localStorage.setItem("template",JSON.stringify(result));

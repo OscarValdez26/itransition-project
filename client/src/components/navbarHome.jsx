@@ -16,7 +16,7 @@ function NavbarHome() {
             <Nav>
                 <Nav.Item onSelect={()=>setPage("popularTemplates")}>{t('Popular_templates')}</Nav.Item>
                 <Nav.Item onSelect={()=>setPage("latestTemplates")} >{t('Latest_templates')}</Nav.Item>
-                <Nav.Item onSelect={()=>setPage("popularTopics")}>{t('Popular_topics')}</Nav.Item>
+                <Nav.Item onSelect={()=>setPage("popularTags")}>{t('Popular_tags')}</Nav.Item>
             </Nav>
             <Nav pullRight>
             <Nav.Menu icon={<GearIcon />}>

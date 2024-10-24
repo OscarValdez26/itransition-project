@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser,loginUser, logoutUser,getPopularTemplates, newTemplate, getAllTemplates, getTemplate, getUserTemplates, updateTemplate, deleteTemplate, newForm, getForms, getAllUsers, updateForm, getLatestTemplates, getTopics, getUserForms } from "../controller/controller.js";
+import { registerUser,loginUser, logoutUser,getPopularTemplates, newTemplate, getAllTemplates, getTemplate, getUserTemplates, updateTemplate, deleteTemplate, newForm, getForms, getAllUsers, updateForm, getLatestTemplates, getTopics, getUserForms, getTags } from "../controller/controller.js";
 import { authRequired, loginSchema, registerSchema, validateSchema } from '../middlewares/validator.js'
 
 const router = Router();
@@ -8,6 +8,7 @@ router.get('/popular',getPopularTemplates);
 router.get('/latest',getLatestTemplates);
 router.get('/logout',logoutUser);
 router.get('/topics',getTopics);
+router.get('/tags',getTags);
 router.get('/getAllUsers',authRequired,getAllUsers);
 router.post('/getAllTemplates',authRequired,getAllTemplates);
 router.post('/register',validateSchema(registerSchema),registerUser);
