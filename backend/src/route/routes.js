@@ -9,7 +9,7 @@ router.get('/latest',getLatestTemplates);
 router.get('/logout',logoutUser);
 router.get('/topics',getTopics);
 router.get('/tags',getTags);
-router.get('/getAllUsers',authRequired,getAllUsers);
+router.post('/getAllUsers',authRequired,getAllUsers); 
 router.post('/getAllTemplates',authRequired,getAllTemplates);
 router.post('/register',validateSchema(registerSchema),registerUser);
 router.post('/login',validateSchema(loginSchema),loginUser);

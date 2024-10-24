@@ -17,9 +17,9 @@ function NewTemplate() {
     const [access, setAccess] = useState("public");
     const [questionType, setQuestionType] = useState();
     const [questionAccess, setQuestionAccess] = useState(true);
-    const [admin,setAdmin] = useState();
-    const [blocked,setBlocked] = useState();
-    const [topic,setTopic] = useState();
+    const [admin,setAdmin] = useState([]);
+    const [blocked,setBlocked] = useState([]);
+    const [topic,setTopic] = useState("");
     const [url,setUrl] = useState("");
     const [tags, setTags] = useState("");
     const navigate = useNavigate();
@@ -96,7 +96,7 @@ function NewTemplate() {
                 <Button color="green" appearance="primary" onClick={saveTemplate}>Save Template</Button>
             </HStack>
             {page === "configuration" && <div className="p-2 m-2 justify-center">
-                {url && <img src={url} alt="Uploaded" style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }} />}
+                {url && <img src={url} alt="Uploaded" style={{ width: '100%', maxHeight: '300px', objectFit: 'cover', objectPosition: 'center' }} />}
                 <p className="text-bold">Title</p>
                 <Input placeholder="Title" size="lg" onChange={(e) => { setTitle(e) }} />
                 <p className="text-bold">Description</p>

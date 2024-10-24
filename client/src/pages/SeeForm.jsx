@@ -10,7 +10,7 @@ function SeeForm() {
     const [url,setUrl] = useState(template.image);
     return (
         <div className="m-2 p-2">
-            {url && <img src={url} alt="Uploaded" style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }} />}
+            {url && <img src={url} alt="Uploaded" style={{ width: '100%', maxHeight: '300px', objectFit: 'cover', objectPosition: 'center' }} />}
             <div className="flex justify-center"><Text className="text-bold m-2 p-2 text-2xl">{template.title}</Text></div>
             <Markdown className="m-2 text-lg">{template.description}</Markdown>
             <ul>

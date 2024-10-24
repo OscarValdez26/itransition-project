@@ -13,6 +13,7 @@ function EditForm() {
     const { t } = useTranslation();
     const [answers, setAnswers] = useState(form.answers);
     const [newAnswers,setNewAnswers] = useState([]);
+    const [url,setUrl] = useState(template.image);
     const navigate = useNavigate();
     const updateAnswers = (newAnswer, idQuestion) => {
         const existQuestion = answers.find((answer) => answer.question === idQuestion);
@@ -54,6 +55,7 @@ function EditForm() {
     }
     return (
         <div className="p-4 m-4">
+            {url && <img src={url} alt="Uploaded" style={{ width: '100%', maxHeight: '300px', objectFit: 'cover', objectPosition: 'center' }} />}
             <div className="flex justify-center">
                 <Text className="text-bold" size={'xxl'}>{template.title}</Text>
             </div>

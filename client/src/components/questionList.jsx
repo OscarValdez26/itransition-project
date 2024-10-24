@@ -1,6 +1,5 @@
 import { useContext, useEffect } from 'react';
 import Sortable from 'sortablejs';
-import Question from './editableQuestion.jsx';
 import { AppContext } from '../context/Provider.jsx';
 import EditableQuestion from './editableQuestion.jsx';
 
@@ -9,7 +8,7 @@ const QuestionsList = ({ onEdit, onDelete, }) => {
     useEffect(() => {
         const element = document.getElementById("questionsList");
         const sortable = Sortable.create(element, {
-            animation:150,        
+            animation:150,   
             onEnd: (evt) => {
                 const changeQuestions = [...questions];
                 const [movedItem] = changeQuestions.splice(evt.oldIndex, 1);

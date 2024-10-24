@@ -260,7 +260,8 @@ export const updateForm = async (request, response) => {
 
 export const getAllUsers = async (request, response) => {
     try {
-        const [result] = await pool.query(`SELECT id,name,email FROM Users;`);
+        const { id } = request.body;
+        const [result] = await pool.query(`SELECT id,name,email FROM Users WHERE id != ${id};`);
         response.json(result);
     } catch (error) {
         response.status(500).json(error);

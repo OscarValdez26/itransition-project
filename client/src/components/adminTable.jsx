@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { getRequest } from "../api/api";
+import { postRequest } from "../api/api";
 import { AppContext } from "../context/Provider";
 import { Button, HStack, Text, SelectPicker } from "rsuite";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ function AdminTable({ setAdmin, setBlocked, admin, blocked }) {
     useEffect(() => {
         
         const getUsers = async () => {
-            const users = await getRequest('/getAllUsers');
+            const users = await postRequest('/getAllUsers',{"id":user.id});
             const newUsers = users.map((user) => ({ ...user, userType: "user" }));
             const arrayAdmin = stringToArray(admin);
             const arrayBlocked = stringToArray(blocked);

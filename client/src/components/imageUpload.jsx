@@ -41,10 +41,9 @@ const ImageUpload = ({ setUrl }) => {
                     setLoading(false);
                 });
         } else {
-            setError(t('Select_image_please')); // Mensaje de error si no hay imagen
+            setError(t('Select_image_please'));
         }
     };
-
     return (
         <div>
             <p className="text-bold">{t('Image')}</p>

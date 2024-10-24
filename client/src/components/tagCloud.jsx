@@ -20,7 +20,7 @@ function TagsCloud() {
                 minSize={12}
                 maxSize={35}
                 tags={data}
-                onClick={tag => alert(`'${tag.value}' was selected!`)}
+                // onClick={tag => alert(`'${tag.value}' was selected!`)}
             />
         </div>
 
