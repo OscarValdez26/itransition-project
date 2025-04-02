@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { request } from 'http';
+const secret = process.env.SECRET_KEY || 'mySecretKey';
 
 export const registerUser = async (request, response) => {
     try {
@@ -14,7 +15,7 @@ export const registerUser = async (request, response) => {
         else{
             const hash = await bcrypt.hash(password, 10);
             const lastID = await dbRun(`INSERT INTO Users (name,email,password) VALUES (?,?,?);`, [name, email, hash]);
-            const token = jwt.sign({ email: email }, process.env.SECRET_KEY, { expiresIn: "7d" });
+            const token = jwt.sign({ email: email }, secret, { expiresIn: "7d" });
             const userFound = await dbGet(`SELECT id,name,email FROM Users WHERE id = ?;`, [lastID]);
             console.log(userFound);
             response.cookie('token', token, { sameSite: "none", httpOnly: true, secure: true }); //PRODUCCION
@@ -32,7 +33,7 @@ export const loginUser = async (request, response) => {
         if (!user) return response.json("User not found");
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return response.json("Password invalid");
-        const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY, { expiresIn: "7d" });
+        const token = jwt.sign({ email: user.email }, secret, { expiresIn: "7d" });
         response.cookie('token', token, { sameSite: "none", httpOnly: true, secure: true });//, { sameSite: "none", httpOnly: true, secure: true }); PRODUCCION
         return response.json({ "id": user.id, "name": user.name, "email": user.email });
     } catch (error) {
@@ -63,7 +64,7 @@ export const newTemplate = async (request, response) => {
     }
 }
 
-export const getPopularTemplates = async (request, response) => { //REVISAR [result] o result
+export const getPopularTemplates = async (request, response) => {
     try {
         const result = await dbAll(`SELECT Templates.id,title,description,topic,name,COUNT(Forms.template) as count FROM Templates INNER JOIN Users ON Templates.autor = Users.id INNER JOIN Forms ON Forms.template = Templates.id WHERE access LIKE "public" GROUP BY Forms.template ORDER BY count DESC LIMIT 5;`);
         return response.json(result);
