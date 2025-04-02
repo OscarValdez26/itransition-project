@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../firebase/firebase.js';
 import { Button, HStack } from 'rsuite';
-import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 
 const ImageUpload = ({ setUrl }) => {
@@ -23,27 +20,51 @@ const ImageUpload = ({ setUrl }) => {
         setError('');
     };
 
-    const handleUpload = () => {
-        if (image) {
-            setLoading(true);
-            const newUUID = uuidv4();
-            const storageRef = ref(storage, `images/${newUUID}`);
-            uploadBytes(storageRef, image)
-                .then(() => {
-                    return getDownloadURL(storageRef);
-                })
-                .then((downloadURL) => {
-                    setUrl(downloadURL);
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    setError(err.message);
-                    setLoading(false);
-                });
-        } else {
-            setError(t('Select_image_please'));
+    const handleUpload = async () => {
+        setLoading(true);
+        const storage = import.meta.env.VITE_BACKEND_URL;
+        if (!image) return;
+      
+        const formData = new FormData();
+        formData.append('image', image);
+      
+        try {
+          const response = await fetch(`${storage}/upload`, {
+            method: 'POST',
+            body: formData,
+            credentials:"include",
+          }); 
+      
+          const data = await response.json();
+          setUrl(`${storage}${data.filePath}`);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error al subir el archivo:', error);
         }
-    };
+      };
+
+    //   const handleUpload = () => {
+    //     if (image) {
+    //         setLoading(true);
+    //         const newUUID = uuidv4();
+    //         const storageRef = ref(storage, `images/${newUUID}`);
+    //         uploadBytes(storageRef, image)
+    //             .then(() => {
+    //                 return getDownloadURL(storageRef);
+    //             })
+    //             .then((downloadURL) => {
+    //                 setUrl(downloadURL);
+    //                 setLoading(false);
+    //             })
+    //             .catch((err) => {
+    //                 setError(err.message);
+    //                 setLoading(false);
+    //             });
+    //     } else {
+    //         setError(t('Select_image_please'));
+    //     }
+    // };
+
     return (
         <div>
             <p className="text-bold">{t('Image')}</p>

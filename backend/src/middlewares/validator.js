@@ -49,7 +49,8 @@ export const authRequired = (request, response, next) => {
         return response.status(401).json({message:"Unauthorized"});
     }
     else{
-        jwt.verify(token, process.env.SECRET_KEY,(err)=>{
+        const secret = process.env.SECRET_KEY || 'mySecretKey';
+        jwt.verify(token, secret,(err)=>{
             if(err){
                 return response.status(403).json({message:"Invalid token"});
             }

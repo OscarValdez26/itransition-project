@@ -1,5 +1,5 @@
 import WebSocket,{ WebSocketServer } from 'ws';
-import { pool } from '../database/db.js'
+import { dbGet, dbAll, dbRun } from '../database/db.js'
 
 const createWSS = (server) => {
     console.log("Iniciando WSS");
@@ -10,6 +10,7 @@ const createWSS = (server) => {
             const {type, payload } = JSON.parse(message);
             if (type === 'GET_COMMENTS') {
                 const data = await getUpdatedComments(payload.template);
+                console.log("GETUPDATEDCOMMENTS: ",data);
                 ws.send(JSON.stringify(data));
             }
             else if (type === 'ADD_COMMENT') {
@@ -29,7 +30,7 @@ const createWSS = (server) => {
         try {
             const { template, user, comment } = payload;
             const queryInsertComment = `INSERT INTO Comments (template, user, comment) VALUES (${template},${user},'${comment}');`;
-            const [result] = await pool.query(queryInsertComment);
+            await dbRun(queryInsertComment);
             return "OK";
         } catch (error) {  
             console.error("Error al insertar: ",error);
@@ -41,7 +42,7 @@ const createWSS = (server) => {
         try {
             const { template, likes, dislikes } = payload;
             const queryUpdateLikes = `UPDATE Likes SET likes = ${likes}, dislikes = ${dislikes} WHERE template = ${template};`;
-            const [result] = await pool.query(queryUpdateLikes);
+            await dbRun(queryUpdateLikes);
             return "OK";
         } catch (error) {  
             console.error("Error al insertar: ",error);
@@ -50,15 +51,16 @@ const createWSS = (server) => {
     }
 
     const getUpdatedComments = async (template) => {
-        const queryGetComments = `SELECT Users.name,comment,DATE_FORMAT(date,"%d/%m/%Y %H:%i:%s") as date FROM Comments INNER JOIN Users ON Users.id = Comments.user WHERE template = ${template} ORDER BY date DESC;`;
-            const [comments] = await pool.query(queryGetComments);
-            const [likes] = await pool.query(`SELECT template,likes,dislikes FROM Likes WHERE template = ${template};`);
+        const queryGetComments = `SELECT Users.name,comment,strftime('%Y-%m-%d %H:%M:%S', date) AS date FROM Comments INNER JOIN Users ON Users.id = Comments.user WHERE template = ${template} ORDER BY date DESC;`;
+            const comments = await dbAll(queryGetComments);
+            const likes = await dbAll(`SELECT template,likes,dislikes FROM Likes WHERE template = ${template};`);
             const jsonData = {
                 "template":likes[0].template,
                 "likes": likes[0].likes,
                 "dislikes": likes[0].dislikes,
                 "comments": comments
             }
+            console.log("JSONDATA: ",jsonData);
             return jsonData;
     }
 

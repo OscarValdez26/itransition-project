@@ -1,9 +1,8 @@
-//const URL = 'https://itransition-project-o3r1.onrender.com/'; // 'http://localhost:3000';
-const URL = import.meta.env.VITE_BACKEND_URL;
+const URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 export async function postRequest(path,json) {
     try {
-        //console.log(`${URL}${path}   `,json)
+        //console.log(`${URL}${path}   `,json);
         const response = await fetch(`${URL}${path}`, {method: "POST",headers: {"Content-Type": "application/json"},credentials:"include",
             body: JSON.stringify(json)
         });

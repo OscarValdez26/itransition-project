@@ -1,0 +1,26 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm install && cd client && npm install && cd ../backend && npm install",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd client && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OscarValdez26/itransition-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OscarValdez26/itransition-project/issues"
+  },
+  "homepage": "https://github.com/OscarValdez26/itransition-project#readme",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
